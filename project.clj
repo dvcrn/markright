@@ -8,7 +8,10 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [sablono "0.3.6"]
                  [org.omcljs/om "0.9.0"]
+                 [com.cemerick/piggieback "0.2.1"]
+                 [org.clojure/tools.nrepl "0.2.10"]
                  [figwheel "0.4.0"]]
+
   :plugins [[lein-cljsbuild "1.0.5"]
             [lein-externs "0.1.3"]
             [lein-figwheel "0.4.0" :exclusions [org.clojure/core.cache]]]
@@ -69,6 +72,8 @@
                                              :pretty-print true
                                              :output-wrapper true
                                              }}}}
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :figwheel {:http-server-root "public"
              :ring-handler figwheel-middleware/app
+             :nrepl-port 7888
              :server-port 3449})

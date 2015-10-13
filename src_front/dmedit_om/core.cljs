@@ -23,12 +23,24 @@
 
 (defn init! []
   ;; (mount-root)
-  (. js/CodeMirror fromTextArea (. js/document (getElementById "code")))
-  (defn windowresize-handler
-    [event]
-    (let [w (.-innerWidth js/window)
-          h (.-innerHeight js/window)]
-      )))
+  )
 
+(defn windowresize-handler
+  [event]
+  (let [w (.-innerWidth js/window)
+        h (.-innerHeight js/window)]
+
+    (let [codemirror (aget
+                      (. js/document
+                         (getElementsByClassName "CodeMirror")) 0)]
+      (.setAttribute codemirror "style" (str "width:"w"px;height:"h"px;")))))
+
+(defonce event-init (.addEventListener js/window "resize" windowresize-handler))
+(defonce codemirror-init
+  (. js/CodeMirror fromTextArea
+     (. js/document (getElementById "code"))
+     (js-obj "lineWrapping" true)))
+
+(windowresize-handler nil)
 
 (init!)
