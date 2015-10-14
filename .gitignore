@@ -14,3 +14,4 @@ app/js
 *.iml
 *.ipr
 *.iws
+*.log

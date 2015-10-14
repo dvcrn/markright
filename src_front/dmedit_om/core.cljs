@@ -21,10 +21,6 @@
    {:target (. js/document
                (getElementById "app"))}))
 
-(defn init! []
-  ;; (mount-root)
-  )
-
 (defn windowresize-handler
   [event]
   (let [w (.-innerWidth js/window)
@@ -35,12 +31,29 @@
                          (getElementsByClassName "CodeMirror")) 0)]
       (.setAttribute codemirror "style" (str "width:"w"px;height:"h"px;")))))
 
-(defonce event-init (.addEventListener js/window "resize" windowresize-handler))
+(defn get-text []
+  (.getValue (@app-state :codemirror)))
+
+(defn parse-markdown [code]
+  (js/marked code))
+
+(defn textchange-handler [event]
+  (.log js/console (parse-markdown (get-text))))
+
 (defonce codemirror-init
-  (. js/CodeMirror fromTextArea
-     (. js/document (getElementById "code"))
-     (js-obj "lineWrapping" true)))
+  (->>
+   (. js/CodeMirror fromTextArea
+      (. js/document (getElementById "code"))
+      (js-obj "lineWrapping" true))
+   (swap! app-state assoc :codemirror)))
+
+(defonce resize-init
+  (.addEventListener js/window "resize" windowresize-handler))
+
+(defonce change-init
+  (.on (@app-state :codemirror) "change" textchange-handler))
+
 
 (windowresize-handler nil)
 
-(init!)
+
