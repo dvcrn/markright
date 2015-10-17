@@ -12,20 +12,13 @@
  :websocket-url   "ws://localhost:3449/figwheel-ws"
  :jsload-callback 'mount-root)
 
-(defonce app-state (atom {:codemirror "codemirror" :window {:w 0 :h 0} :foo "bar"}))
+(defonce app-state (atom {:app {:foo "bar" :window "window" :codemirror "mooo"}}))
 
 (defmulti read om/dispatch)
-(defmethod read :foo
+(defmethod read :app
   [{:keys [state] :as env} key params]
-  {:value (@state key)})
-
-(defmethod read :codemirror
-  [{:keys [state] :as env} key params]
-  {:value (@state key)})
-
-(defmethod read :window
-  [{:keys [state] :as env} key params]
-  {:value (@state key)})
+  (let [app (@app-state :app)]
+    {:value (map #(hash-map (nth % 0) (select-keys app (nth % 1))) (seq params))}))
 
 (defmulti mutate om/dispatch)
 (defmethod mutate 'window/size
@@ -34,7 +27,7 @@
 
 (defmethod mutate `codemirror
   [{:keys [state]} _ {:keys [codemirror]}]
-  {:action #(swap! state assoc  :codemirror codemirror)})
+  {:action #(swap! state assoc :codemirror codemirror)})
 
 (def reconciler
   (om/reconciler
@@ -42,12 +35,15 @@
     :parser (om/parser {:read read :mutate mutate})}))
 
 (defui RootComponent
+  static om/IQueryParams
+  (params [this]
+          {:codemirror-query (om/get-query CodemirrorComponent)})
   static om/IQuery
   (query [this]
-         (let [subquery (om/get-query CodemirrorComponent)]
-           (into [] (concat subquery [:foo]))))
+         '[(:app {:codemirror-query ?codemirror-query})])
   Object
   (render [this]
+          (println (om/props this))
           (codemirror (om/props this))))
 
 (defn windowresize-handler
@@ -56,15 +52,6 @@
         h (.-innerHeight js/window)]
     (om/transact! reconciler
                   `[(window/size {:w ~w :h ~h})])))
-
-;; (defn get-text []
-;;   (.getValue (@app-state :codemirror)))
-;; 
-;; (defn parse-markdown [code]
-;;   (js/marked code))
-;; 
-;; (defn textchange-handler [event]
-;;   (.log js/console (parse-markdown (get-text))))
 
 (defonce resize-init
   (.addEventListener js/window "resize" windowresize-handler))

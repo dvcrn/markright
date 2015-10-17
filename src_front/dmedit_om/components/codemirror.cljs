@@ -13,7 +13,7 @@
 (defui CodemirrorComponent
   static om/IQuery
   (query [this]
-         '[:codemirror :window])
+         [:codemirror])
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))
@@ -27,8 +27,9 @@
                                           #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
                        (om/transact! this `[(codemirror {:codemirror ~codemirror})]))
 
-                     (let [{:keys [window]} (om/props this)]
-                       (resize-codemirror (window :w) (window :h)))))
+                     ;(let [{:keys [window]} (om/props this)]
+                     ;  (resize-codemirror (window :w) (window :h)))
+                     ))
 
 ;; (defn get-text []
 ;;   (.getValue (@app-state :codemirror)))
