@@ -13,7 +13,7 @@
 (defui CodemirrorComponent
   static om/IQuery
   (query [this]
-         [:codemirror])
+         '[:window])
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))

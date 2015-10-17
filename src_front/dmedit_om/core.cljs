@@ -12,13 +12,18 @@
  :websocket-url   "ws://localhost:3449/figwheel-ws"
  :jsload-callback 'mount-root)
 
-(defonce app-state (atom {:app {:foo "bar" :window "window" :codemirror "mooo"}}))
+(defonce app-state (atom {:foo "bar" :window "window" :cm "mooo"}))
 
 (defmulti read om/dispatch)
-(defmethod read :app
-  [{:keys [state] :as env} key params]
-  (let [app (@app-state :app)]
-    {:value (map #(hash-map (nth % 0) (select-keys app (nth % 1))) (seq params))}))
+;;(defmethod read :app
+;;  [{:keys [state] :as env} key params]
+;;  (let [app (@app-state :app)]
+;;    {:value (map #(hash-map (nth % 0) (select-keys app (nth % 1))) (seq params))}))
+
+(defmethod read :default
+  [{:keys [state selector]} k _]
+  (let [st @state]
+    {:value (select-keys st selector)}))
 
 (defmulti mutate om/dispatch)
 (defmethod mutate 'window/size
@@ -40,11 +45,11 @@
           {:codemirror-query (om/get-query CodemirrorComponent)})
   static om/IQuery
   (query [this]
-         '[(:app {:codemirror-query ?codemirror-query})])
+         '[{:codemirror-props ?codemirror-query}])
   Object
   (render [this]
-          (println (om/props this))
-          (codemirror (om/props this))))
+          (let [{:keys [codemirror-props]} (om/props this)]
+            (codemirror codemirror-props))))
 
 (defn windowresize-handler
   [event]
