@@ -25,11 +25,11 @@
                      (let [codemirror 
                            (js/CodeMirror (gdom/getElement "codemirror-target")
                                           #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
-                       (om/transact! this `[(codemirror {:codemirror ~codemirror})]))
+                       (om/transact! this '[(codemirror {:codemirror ~codemirror})]))
 
-                     ;(let [{:keys [window]} (om/props this)]
-                     ;  (resize-codemirror (window :w) (window :h)))
-                     ))
+                     (let [{:keys [window]} (om/props this)]
+                       (println window)
+                       (resize-codemirror (window :w) (window :h)))))
 
 ;; (defn get-text []
 ;;   (.getValue (@app-state :codemirror)))
