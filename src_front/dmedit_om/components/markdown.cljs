@@ -26,11 +26,14 @@
                              (let [{:keys [cm/size cm/text]} (om/props this)]
                                (println (js/marked text))
                                (update-dom (js/marked text))
-                               (resize-markdown (size :w) (size :h))))
+                               ;;(resize-markdown (size :w) (size :h))
+                               )
+                             )
   (componentDidMount [this]
                      (println "did mount")
                      (let [{:keys [cm/size cm]} (om/props this)]
-                       (resize-markdown (size :w) (size :h)))))
+                       ;;(resize-markdown (size :w) (size :h))
+                       )))
 
 
 (def markdown (om/factory MarkdownComponent))
