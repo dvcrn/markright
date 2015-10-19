@@ -13,27 +13,32 @@
 (defui CodemirrorComponent
   static om/IQuery
   (query [this]
-         '[:window])
+         '[:cm/size :cm :cm/text])
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))
 
   (componentWillReceiveProps [this next-props]
-                             (let [{:keys [window]} (om/props this)]
-                               (resize-codemirror (window :w) (window :h))))
+                             (let [{:keys [cm cm/size cm/text]} (om/props this)]
+                               (.setValue (.getDoc cm) text)
+                               (resize-codemirror (size :w) (size :h))))
   (componentDidMount [this]
                      (let [codemirror 
                            (js/CodeMirror (gdom/getElement "codemirror-target")
                                           #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
-                       (om/transact! this '[(codemirror {:codemirror ~codemirror})]))
+                       (om/transact! this `[(codemirror/instance {:codemirror ~codemirror})])
 
-                     (let [{:keys [window]} (om/props this)]
-                       (println window)
-                       (resize-codemirror (window :w) (window :h)))))
+                       ;; resize the editor to full size
+                       (let [{:keys [cm/size cm]} (om/props this)]
+                         (resize-codemirror (size :w) (size :h))
+
+                         (.on codemirror "change"
+                              #(om/transact! this `[(codemirror/text
+                                                     {:text ~(.getValue codemirror)})]))))))
 
 ;; (defn get-text []
-;;   (.getValue (@app-state :codemirror)))
-;; 
+  ;;(.getValue (@app-state :codemirror)))
+ 
 ;; (defn parse-markdown [code]
 ;;   (js/marked code))
 ;; 

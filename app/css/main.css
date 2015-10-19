@@ -3,6 +3,17 @@ body {
 	font-family: 'Cousine', ;
 }
 
+#codemirror-target {
+	position: absolute;
+	left: 0;
+}
+
+#parsed-markdown {
+	position: absolute;
+	right: 0;
+	text-align: left;
+}
+
 .CodeMirror {
 	font-family: 'Cousine', !important;
  background: #f9fafa !important;

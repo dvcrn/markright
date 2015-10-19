@@ -13,6 +13,14 @@
   [{:keys [state]} _ {:keys [w h]}]
   {:action #(swap! state assoc :window {:w w :h h})})
 
-(defmethod mutate 'codemirror
+(defmethod mutate 'cm/size
+  [{:keys [state]} _ {:keys [w h]}]
+  {:action #(swap! state assoc :cm/size {:w w :h h})})
+
+(defmethod mutate 'codemirror/instance
   [{:keys [state]} _ {:keys [codemirror]}]
   {:action #(swap! state assoc :cm codemirror)})
+
+(defmethod mutate 'codemirror/text
+  [{:keys [state]} _ {:keys [text]}]
+  {:action #(swap! state assoc :cm/text text)})
