@@ -18,6 +18,7 @@
   :hooks [leiningen.cljsbuild]
   :cljsbuild {
               :builds {:main {:id "dmedit"
+                              :figwheel true
                               :source-paths ["src"]
                               :incremental true
                               :jar true
@@ -46,6 +47,7 @@
                                          :output-wrapper true
                                          }}
                        :frontend {:id "dmedit-om"
+                                  :figwheel true
                                   :source-paths ["src_front"]
                                   :incremental true
                                   :jar true

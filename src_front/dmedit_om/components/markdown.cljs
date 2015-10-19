@@ -18,11 +18,13 @@
 (defui MarkdownComponent
   static om/IQuery
   (query [this]
-         '[:cm/text :cm/size])
+         '[:html])
   Object
   (render [this]
+          (println "renderydoo")
           (dom/div #js {:id "parsed-markdown"} "foooo"))
   (componentWillReceiveProps [this next-props]
+                             (println "receive props")
                              (let [{:keys [cm/size cm/text]} (om/props this)]
                                (println (js/marked text))
                                (update-dom (js/marked text))

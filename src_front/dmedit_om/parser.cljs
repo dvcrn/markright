@@ -4,23 +4,20 @@
 
 (defmulti read om/dispatch)
 (defmethod read :default
-  [{:keys [state selector]} k _]
+  [{:keys [state]} k _]
   (let [st @state]
-    {:value (select-keys st selector)}))
+    (find st k)
+    (if-let [[_ v] (find st k)]
+      {:value v}
+      {:value :not-found})))
 
 (defmulti mutate om/dispatch)
-(defmethod mutate 'window/size
-  [{:keys [state]} _ {:keys [w h]}]
-  {:action #(swap! state assoc :window {:w w :h h})})
-
-(defmethod mutate 'cm/size
-  [{:keys [state]} _ {:keys [w h]}]
-  {:action #(swap! state assoc :cm/size {:w w :h h})})
-
 (defmethod mutate 'codemirror/instance
   [{:keys [state]} _ {:keys [codemirror]}]
-  {:action #(swap! state assoc :cm codemirror)})
+  {:action #(swap! state assoc-in [:codemirror :instance] codemirror)})
 
 (defmethod mutate 'codemirror/text
   [{:keys [state]} _ {:keys [text]}]
-  {:action #(swap! state assoc :cm/text text)})
+  {:action #(do
+              (swap! state assoc-in [:codemirror :text] text)
+              (swap! state assoc-in [:markdown :text] text))})

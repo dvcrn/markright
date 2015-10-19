@@ -7,22 +7,25 @@
 (defui CodemirrorComponent
   static om/IQuery
   (query [this]
-         '[:cm :cm/text])
+         '[:instance :text])
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))
 
-  (componentWillReceiveProps [this next-props]
-                             (let [{:keys [cm cm/size cm/text]} (om/props this)]
-                               (.setValue (.getDoc cm) text)))
+  ;; (componentWillReceiveProps [this next-props]
+  ;;                            (let [{:keys [cm cm/size cm/text]} (om/props this)]
+  ;;                              (.setValue (.getDoc cm) text)))
   (componentDidMount [this]
-                     (let [codemirror 
-                           (js/CodeMirror (gdom/getElement "codemirror-target")
-                                          #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
-                       (om/transact! this `[(codemirror/instance {:codemirror ~codemirror})])
-                       (.on codemirror "change"
-                            #(om/transact! this `[(codemirror/text
-                                                   {:text ~(.getValue codemirror)})])))))
+                     (println "inside codemirror mount")
+                     (println (om/props this))
+                     ;; (let [codemirror 
+                     ;;       (js/CodeMirror (gdom/getElement "codemirror-target")
+                     ;;                      #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
+                     ;;   (om/transact! this `[(codemirror/instance {:codemirror ~codemirror})])
+                     ;;   (.on codemirror "change"
+                     ;;        #(om/transact! this `[(codemirror/text
+                     ;;                               {:text ~(.getValue codemirror)})])))
+                     ))
 
 ;; (defn get-text []
   ;;(.getValue (@app-state :codemirror)))
