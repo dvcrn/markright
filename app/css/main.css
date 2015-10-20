@@ -41,6 +41,10 @@ body {
  margin: 0 auto;
 }
 
+#codemirror-target {
+	background: #f9fafa;
+}
+
 .markdown-body {
 	padding: 30px;
 }
@@ -48,6 +52,6 @@ body {
 .CodeMirror {
 	font-family: 'Cousine', !important;
  background: #f9fafa !important;
-	height: auto !important;
 	width: 100% !important;
+	cursor: text;
 }
