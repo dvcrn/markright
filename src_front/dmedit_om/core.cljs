@@ -26,7 +26,7 @@
                                      :text-callback #(om/transact! this `[(app/text {:text ~%})])})
                      (md/markdown {:app/html (js/marked text)})))))
 
-(def app-state (atom  {:app/text "Test" :app/html "<p>html</p>"}))
+(def app-state (atom  {:app/text "## This is a GFM markdown editor"}))
 
 (def reconciler
   (om/reconciler

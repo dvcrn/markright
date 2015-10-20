@@ -16,7 +16,8 @@
                                           #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
                        (swap! local-state assoc :codemirror codemirror)
 
-                       (let [{:keys [text-callback]} (om/props this)]
+                       (let [{:keys [app/text text-callback]} (om/props this)]
+                         (.setValue (.getDoc codemirror) text)
                          (.on codemirror "change"
                               #(text-callback (.getValue codemirror)))))))
 
