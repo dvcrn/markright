@@ -1,10 +1,5 @@
 # dmedit
 
-FIXME: description
+a minimalistic editor for github flavored markdown documents
 
-## License
-
-Copyright ©  FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+![screenshot][https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/screenshot.png]
