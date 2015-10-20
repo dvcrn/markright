@@ -30,6 +30,7 @@
                      (let [codemirror 
                            (js/CodeMirror (gdom/getElement "codemirror-target")
                                           #js {:matchBrackets true
+                                               :mode "gfm"
                                                :autoCloseBrackets true
                                                :lineWrapping true
                                                :lineNumbers true

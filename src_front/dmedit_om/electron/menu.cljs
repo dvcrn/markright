@@ -4,6 +4,7 @@
 (def remote (js/require "remote"))
 (def menu (.require remote "menu"))
 (def actions (.require remote "./actions"))
+(def app-name "dmedit")
 
 ;; Functions
 (defn reload! []
@@ -20,12 +21,36 @@
 
 ;; Menu structure
 (def dmedit #js {:label "dmedit"
-   :submenu #js
-   [#js {:label "About dmedit"
-         :selector "orderFrontStandardAboutPanel:"}
-    #js {:label "Quit"
-         :accelerator "Command+Q"
-         :selector "terminate:"}]})
+                 :submenu #js
+                 [
+                  #js {:label (str  "About " app-name)
+                       :role "about"}
+
+                  #js {:type "separator"}
+
+                  #js {:label "Services"
+                       :role "services"
+                       :submenu #js []}
+
+                  #js {:type "separator"}
+
+                  #js {:label (str "Hide " app-name)
+                       :accelerator "CmdOrCtrl+H"
+                       :role "hide"}
+
+                  #js {:label "Hide Others"
+                       :accelerator "CmdOrCtrl+Shift+H"
+                       :role "hideothers"}
+
+                  #js {:label "Show All"
+                       :role "unhide"}
+
+                  #js {:type "separator"}
+
+                  #js {:label "Quit"
+                       :accelerator "CmdOrCtrl+Q"
+                       :selector "terminate:"}
+                  ]})
 
 (def file #js {:label "File"
    :submenu #js
@@ -34,6 +59,38 @@
          :accelerator "Command+O"
          :click open-file!}
     ]})
+
+
+(def edit #js {:label "Edit"
+               :submenu #js
+               [
+                #js {:label "Undo"
+                     :accelerator "CmdOrCtrl+Z"
+                     :role "undo"}
+
+                #js {:label "Redo"
+                     :accelerator "Shift+CmdOrCtrl+Z"
+                     :role "redo"}
+
+                #js {:type "separator"}
+
+                #js {:label "Copy"
+                     :accelerator "CmdOrCtrl+C"
+                     :role "copy"}
+
+                #js {:label "Paste"
+                     :accelerator "CmdOrCtrl+V"
+                     :role "paste"}
+
+                #js {:label "Cut"
+                     :accelerator "CmdOrCtrl+X"
+                     :role "Cut"}
+
+                #js {:label "Select All"
+                     :accelerator "CmdOrCtrl+A"
+                     :role "selectall"}
+
+                ]})
 
 (def develop #js {:label "Develop"
                   :submenu #js
@@ -48,4 +105,4 @@
                    ]})
 
 (defn create-menu! []
-  (.setApplicationMenu menu (.buildFromTemplate menu #js [dmedit file develop])))
+  (.setApplicationMenu menu (.buildFromTemplate menu #js [dmedit file edit develop])))
