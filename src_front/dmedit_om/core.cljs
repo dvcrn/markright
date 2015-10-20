@@ -19,23 +19,19 @@
 (defui RootComponent
   static om/IQuery
   (query [this]
-         '[:app/text :app/html])
+         '[:app/text :app/html :app/force-overwrite])
   Object
   (componentWillMount [this]
                       (.setOptions js/marked #js {:gfm true}))
   (render [this]
-          (let [{:keys [app/text app/html]} (om/props this)]
+          (let [{:keys [app/text app/html app/force-overwrite]} (om/props this)]
 
             (dom/div #js {:id "wrapper"}
-                     (cm/codemirror {:app/text text
-                                     :text-callback #(om/transact! this `[(app/text {:text ~%})])})
+                     (cm/codemirror {:app/force-overwrite force-overwrite
+                                     :app/text text
+                                     :text-callback #(om/transact! this `[(app/text {:text ~%})])
+                                     :overwrite-callback #(om/transact! this `[(app/transact-overwrite)])})
                      (md/markdown {:app/html (js/marked text)})))))
 
-(def app-state (atom  {:app/text "## Welcome to dmedit\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)"}))
 
-(def reconciler
-  (om/reconciler
-   {:state app-state
-    :parser (om/parser {:read p/read :mutate p/mutate})}))
-
-(om/add-root! reconciler RootComponent (gdom/getElement "app"))
+(om/add-root! p/reconciler RootComponent (gdom/getElement "app"))
