@@ -17,6 +17,15 @@
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))
+  (componentWillReceiveProps [this next-props]
+                             (let [{:keys [app/force-overwrite app/text]} next-props]
+                               ;; Ignore overwriting if force-overwrite is not true
+                               ;; This is because the cursor would jump if we overwrite
+                               ;; the entire thing with every keypress. Not good, no no
+                               (if force-overwrite
+                                 (do
+                                   (.setValue (.getDoc (@local-state :codemirror)) text)
+                                   ((@local-state :overwrite-callback))))))
   (componentDidMount [this]
                      (let [codemirror 
                            (js/CodeMirror (gdom/getElement "codemirror-target")
@@ -27,7 +36,8 @@
                                                })]
                        (swap! local-state assoc :codemirror codemirror)
 
-                       (let [{:keys [app/text text-callback]} (om/props this)]
+                       (let [{:keys [app/text text-callback overwrite-callback]} (om/props this)]
+                         (swap! local-state assoc :overwrite-callback overwrite-callback)
                          (.setValue (.getDoc codemirror) text)
                          (.on codemirror "change"
                               #(text-callback (.getValue codemirror)))))

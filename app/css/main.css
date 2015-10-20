@@ -47,6 +47,7 @@ body {
 
 .markdown-body {
 	padding: 30px;
+	overflow: auto;
 }
 
 .CodeMirror {
