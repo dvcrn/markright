@@ -18,6 +18,8 @@
   (query [this]
          '[:app/text :app/html])
   Object
+  (componentWillMount [this]
+                      (.setOptions js/marked #js {:gfm true}))
   (render [this]
           (let [{:keys [app/text app/html]} (om/props this)]
 
@@ -26,7 +28,7 @@
                                      :text-callback #(om/transact! this `[(app/text {:text ~%})])})
                      (md/markdown {:app/html (js/marked text)})))))
 
-(def app-state (atom  {:app/text "## This is a GFM markdown editor"}))
+(def app-state (atom  {:app/text "## Welcome to dmedit\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)"}))
 
 (def reconciler
   (om/reconciler
