@@ -23,7 +23,7 @@
                               :incremental true
                               :jar true
                               :assert true
-                              :compiler {:output-to "app/js/cljsbuild-main.js"
+                              :compiler {:output-to "app/js/main.js"
                                          :externs ["app/js/externs.js"
                                                    "node_modules/closurecompiler-externs/path.js"
                                                    "node_modules/closurecompiler-externs/process.js"]
