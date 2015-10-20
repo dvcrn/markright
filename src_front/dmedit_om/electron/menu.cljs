@@ -4,7 +4,8 @@
 (def remote (js/require "remote"))
 (def menu (.require remote "menu"))
 (def actions (.require remote "./actions"))
-(def app-name "dmedit")
+(def app-name (.getName (.require remote "app")))
+(def shell (.require remote "shell"))
 
 ;; Functions
 (defn reload! []
@@ -18,6 +19,9 @@
      (let [content (.read_file actions.core filepath)]
        (swap! parser/app-state assoc :app/force-overwrite true)
        (swap! parser/app-state assoc :app/text content))))
+
+(defn open-url! [url]
+  (.openExternal shell url))
 
 ;; Menu structure
 (def dmedit #js {:label "dmedit"
@@ -92,17 +96,42 @@
 
                 ]})
 
+(def window #js {:label "Window"
+                 :role "window"
+                 :submenu #js
+                 [
+                  #js {:label "Minimize"
+                       :accelerator "CmdOrCtrl+R"
+                       :role "minimize"}
+
+                  #js {:label "Close"
+                       :accelerator "CmdOrCtrl+W"
+                       :role "close"}
+                  ]})
+
 (def develop #js {:label "Develop"
                   :submenu #js
                   [
                    #js {:label "Reload"
-                        :accelerator "Command+R"
+                        :accelerator "CmdOrCtrl+R"
                         :click reload!}
 
                    #js {:label "Toggle DevTools"
-                        :accelerator "Alt+Command+I"
+                        :accelerator "Alt+CmdOrCtrl+I"
                         :click toggle-devtools!}
                    ]})
 
+(def help #js {:label "Help"
+                 :role "help"
+                 :submenu #js
+                 [
+
+                  #js {:label "dmedit on Github"
+                       :click #(open-url! "https://github.com/dvcrn/dmedit")}
+
+                  #js {:label "@davicorn (Twitter)"
+                       :click #(open-url! "https://twitter.com/davicorn")}
+                  ]})
+
 (defn create-menu! []
-  (.setApplicationMenu menu (.buildFromTemplate menu #js [dmedit file edit develop])))
+  (.setApplicationMenu menu (.buildFromTemplate menu #js [dmedit file edit window develop help])))
