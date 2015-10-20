@@ -17,13 +17,43 @@
   :source-paths ["src_tools"]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {
-              :builds {:main {:id "dmedit"
+              :builds {
+                       :main {:id "dmedit"
                               :figwheel true
                               :source-paths ["src"]
                               :incremental true
                               :jar true
                               :assert true
                               :compiler {:output-to "app/js/main.js"
+                                         :externs ["app/js/externs.js"
+                                                   "node_modules/closurecompiler-externs/path.js"
+                                                   "node_modules/closurecompiler-externs/process.js"]
+                                         :warnings true
+                                         :elide-asserts true
+                                         :target :nodejs
+
+                                         ;; no optimize compile (dev)
+                                         ;;:optimizations :none
+                                         ;; when no optimize uncomment
+                                         ;;:output-dir "app/js/out"
+
+                                         ;; simple compile (dev)
+                                         :optimizations :simple
+
+                                         ;; advanced compile (prod)
+                                        ;:optimizations :advanced
+
+                                        ;:source-map "app/js/test.js.map"
+                                         :pretty-print true
+                                         :output-wrapper true
+                                         }}
+                       :actions {:id "dmedit-actions"
+                              :figwheel true
+                              :source-paths ["src_actions"]
+                              :incremental true
+                              :jar true
+                              :assert true
+                              :compiler {:output-to "app/js/actions.js"
                                          :externs ["app/js/externs.js"
                                                    "node_modules/closurecompiler-externs/path.js"
                                                    "node_modules/closurecompiler-externs/process.js"]
