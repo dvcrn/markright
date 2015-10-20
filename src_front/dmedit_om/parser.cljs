@@ -12,12 +12,12 @@
       {:value :not-found})))
 
 (defmulti mutate om/dispatch)
-(defmethod mutate 'codemirror/instance
-  [{:keys [state]} _ {:keys [codemirror]}]
-  {:action #(swap! state assoc-in [:codemirror :instance] codemirror)})
+(defmethod mutate 'app/html
+  [{:keys [state]} _ {:keys [html]}]
+  {:value [:app/html]
+   :action #(swap! state assoc-in [:app/html] html)})
 
-(defmethod mutate 'codemirror/text
+(defmethod mutate 'app/text
   [{:keys [state]} _ {:keys [text]}]
-  {:action #(do
-              (swap! state assoc-in [:codemirror :text] text)
-              (swap! state assoc-in [:markdown :text] text))})
+  {:value [:app/text]
+   :action (swap! state assoc-in [:app/text] text)})

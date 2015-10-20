@@ -4,36 +4,20 @@
             [goog.dom :as gdom]
             [figwheel.client :as fw :include-macros true]))
 
+(defonce local-state (atom {}))
+
 (defui CodemirrorComponent
-  static om/IQuery
-  (query [this]
-         '[:instance :text])
   Object
   (render [this]
           (dom/div #js {:id "codemirror-target"}))
-
-  ;; (componentWillReceiveProps [this next-props]
-  ;;                            (let [{:keys [cm cm/size cm/text]} (om/props this)]
-  ;;                              (.setValue (.getDoc cm) text)))
   (componentDidMount [this]
-                     (println "inside codemirror mount")
-                     (println (om/props this))
-                     ;; (let [codemirror 
-                     ;;       (js/CodeMirror (gdom/getElement "codemirror-target")
-                     ;;                      #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
-                     ;;   (om/transact! this `[(codemirror/instance {:codemirror ~codemirror})])
-                     ;;   (.on codemirror "change"
-                     ;;        #(om/transact! this `[(codemirror/text
-                     ;;                               {:text ~(.getValue codemirror)})])))
-                     ))
+                     (let [codemirror 
+                           (js/CodeMirror (gdom/getElement "codemirror-target")
+                                          #js {:matchBrackets true :autoCloseBrackets true :lineWrapping true})]
+                       (swap! local-state assoc :codemirror codemirror)
 
-;; (defn get-text []
-  ;;(.getValue (@app-state :codemirror)))
- 
-;; (defn parse-markdown [code]
-;;   (js/marked code))
-;; 
-;; (defn textchange-handler [event]
-;;   (.log js/console (parse-markdown (get-text))))
+                       (let [{:keys [text-callback]} (om/props this)]
+                         (.on codemirror "change"
+                              #(text-callback (.getValue codemirror)))))))
 
 (def codemirror (om/factory CodemirrorComponent))

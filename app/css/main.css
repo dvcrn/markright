@@ -35,6 +35,16 @@ body {
  align-content: stretch; /* Extra space in Cross Axis */
 }
 
+#parsed-markdown {
+	min-width: 200px;
+ max-width: 790px;
+ margin: 0 auto;
+}
+
+.markdown-body {
+	padding: 30px;
+}
+
 .CodeMirror {
 	font-family: 'Cousine', !important;
  background: #f9fafa !important;
