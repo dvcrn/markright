@@ -10,9 +10,6 @@
 (def app (nodejs/require "app"))
 (def actions (nodejs/require "./actions"))
 
-(defn init! []
-  )
-
 (defn -main []
   (.start crash-reporter)
 
@@ -28,7 +25,7 @@
   (.on app "activate"
        (fn []
          (reset! *win* (BrowserWindow. (clj->js {:width 800 :height 600})))
-         ))
+         (.loadUrl @*win* (str "file://" (.resolve path (js* "__dirname") "../index.html")))))
 
   ;; ready listener
   (.on app "ready"
