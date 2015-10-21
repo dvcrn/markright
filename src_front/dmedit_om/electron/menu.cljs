@@ -83,7 +83,7 @@
 
     #js {:label "Save as..."
          :accelerator "CmdOrCtrl+Shift+S"
-         :click save-file!}
+         :click save-file-as!}
     ]})
 
 
