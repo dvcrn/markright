@@ -77,7 +77,7 @@
                                          :output-wrapper true
                                          }}
                        :frontend {:id "dmedit-om"
-                                  :figwheel true
+                                  ;; :figwheel true
                                   :source-paths ["src_front"]
                                   :incremental true
                                   :jar true

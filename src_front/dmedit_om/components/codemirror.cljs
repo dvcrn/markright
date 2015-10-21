@@ -1,8 +1,7 @@
 (ns dmedit-om.components.codemirror
   (:require [om.next :as om :refer-macros [defui]]
             [om.dom :as dom :include-macros true]
-            [goog.dom :as gdom]
-            [figwheel.client :as fw :include-macros true]))
+            [goog.dom :as gdom]))
 
 (defonce local-state (atom {}))
 
