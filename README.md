@@ -2,7 +2,7 @@
 
 a minimalistic editor for github flavored markdown documents
 
-![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/preview.gif)
+![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markdown.gif)
 
 ## Download
 
