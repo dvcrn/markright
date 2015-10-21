@@ -7,7 +7,7 @@
 (def dialog (nodejs/require "dialog"))
 (def fs (nodejs/require "fs"))
 
-(defn ^:export open-file []
+(defn ^:export open-dialog []
   (.showOpenDialog dialog #js
                    {:properties #js ["openFile"]
                     :filters #js [
@@ -19,6 +19,15 @@
 
 (defn ^:export read-file [filepath]
   (.readFileSync fs filepath #js {:encoding "utf8"}))
+
+(defn ^:export write-file [filepath content]
+  (.writeFileSync fs filepath content #js {:encoding "utf8"}))
+
+(defn ^:export save-dialog []
+  (.showSaveDialog dialog #js
+                   {:filters #js [
+                                  #js {:name "All Files"
+                                       :extensions #js ["*"]}]}))
 
 (defn noop [] nil)
 (set! *main-cli-fn* noop)

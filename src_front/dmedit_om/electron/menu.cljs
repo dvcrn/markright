@@ -15,10 +15,23 @@
   (.toggleDevTools (.getCurrentWindow remote)))
 
 (defn open-file! []
-   (let [filepath (aget (.open_file actions.core) 0)]
+   (let [filepath (aget (.open_dialog actions.core) 0)]
      (let [content (.read_file actions.core filepath)]
        (swap! parser/app-state assoc :app/force-overwrite true)
        (swap! parser/app-state assoc :app/text content))))
+
+(defn save-file-as! []
+  (let [filepath (.save_dialog actions.core)]
+    (let [content (@parser/app-state :app/text)]
+      (.write_file actions.core filepath content)
+      (swap! parser/app-state assoc :app/filepath filepath))))
+
+(defn save-file! []
+  (let [state-path (@parser/app-state :app/filepath)
+        content (@parser/app-state :app/text)]
+    (if (nil? state-path)
+      (save-file-as!)
+      (.write_file actions.core state-path content))))
 
 (defn open-url! [url]
   (.openExternal shell url))
@@ -60,8 +73,16 @@
    :submenu #js
    [
     #js {:label "Open..."
-         :accelerator "Command+O"
+         :accelerator "CmdOrCtrl+O"
          :click open-file!}
+
+    #js {:label "Save"
+         :accelerator "CmdOrCtrl+S"
+         :click save-file!}
+
+    #js {:label "Save as..."
+         :accelerator "CmdOrCtrl+Shift+S"
+         :click save-file!}
     ]})
 
 
@@ -101,7 +122,7 @@
                  :submenu #js
                  [
                   #js {:label "Minimize"
-                       :accelerator "CmdOrCtrl+R"
+                       :accelerator "CmdOrCtrl+M"
                        :role "minimize"}
 
                   #js {:label "Close"
