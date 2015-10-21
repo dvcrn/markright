@@ -17,9 +17,10 @@
 (defn open-file! []
    (let [filepath (aget (.open_dialog actions.core) 0)]
      (let [content (.read_file actions.core filepath)]
-       (swap! parser/app-state assoc :app/force-overwrite true)
-       (swap! parser/app-state assoc :app/text content)
-       (swap! parser/app-state assoc :app/filepath filepath))))
+       (swap! parser/app-state assoc
+              :app/force-overwrite true
+              :app/text content
+              :app/filepath filepath))))
 
 (defn save-file-as! []
   (let [filepath (.save_dialog actions.core)]

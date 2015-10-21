@@ -19,10 +19,14 @@
 (defui RootComponent
   static om/IQuery
   (query [this]
-         '[:app/text :app/html :app/force-overwrite])
+         '[:app/text :app/force-overwrite :app/filepath])
   Object
   (componentWillMount [this]
                       (.setOptions js/marked #js {:gfm true}))
+  (componentWillReceiveProps [this next-props]
+                     (let [{:keys [app/filepath]} next-props]
+                       (if (not (nil? filepath))
+                         (set! (.-title js/document) filepath))))
   (render [this]
           (let [{:keys [app/text app/html app/force-overwrite]} (om/props this)]
 
