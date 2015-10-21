@@ -10,6 +10,8 @@
 (def app (nodejs/require "app"))
 (def actions (nodejs/require "./actions"))
 
+(defn init! []
+  )
 
 (defn -main []
   (.start crash-reporter)
@@ -22,6 +24,11 @@
   (.on app "window-all-closed"
        (fn [] (if (not= (.-platform nodejs/process) "darwin")
                 (.quit app))))
+
+  (.on app "activate"
+       (fn []
+         (reset! *win* (BrowserWindow. (clj->js {:width 800 :height 600})))
+         ))
 
   ;; ready listener
   (.on app "ready"

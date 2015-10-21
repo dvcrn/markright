@@ -20,20 +20,25 @@
        (swap! parser/app-state assoc
               :app/force-overwrite true
               :app/text content
+              :app/saved-text content
               :app/filepath filepath))))
 
 (defn save-file-as! []
   (let [filepath (.save_dialog actions.core)]
     (let [content (@parser/app-state :app/text)]
       (.write_file actions.core filepath content)
-      (swap! parser/app-state assoc :app/filepath filepath))))
+      (swap! parser/app-state assoc
+             :app/filepath filepath
+             :app/saved-text content))))
 
 (defn save-file! []
   (let [state-path (@parser/app-state :app/filepath)
         content (@parser/app-state :app/text)]
     (if (nil? state-path)
       (save-file-as!)
-      (.write_file actions.core state-path content))))
+      (do
+        (.write_file actions.core state-path content)
+        (swap! parser/app-state assoc :app/saved-text content)))))
 
 (defn open-url! [url]
   (.openExternal shell url))
