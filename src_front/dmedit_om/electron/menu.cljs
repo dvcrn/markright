@@ -6,6 +6,7 @@
 (def actions (.require remote "./actions"))
 (def app-name (.getName (.require remote "app")))
 (def shell (.require remote "shell"))
+(def process (.require remote "process"))
 
 ;; Functions
 (defn reload! []
@@ -162,4 +163,5 @@
                   ]})
 
 (defn create-menu! []
-  (.setApplicationMenu menu (.buildFromTemplate menu #js [dmedit file edit window develop help])))
+  (.setApplicationMenu menu (.buildFromTemplate menu
+                                                #js [(if (= (.-platform process) "darwin") dmedit) file edit window develop help])))
