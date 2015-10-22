@@ -1,6 +1,8 @@
-![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markright-banner.png)
+![banner](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markright-banner.png)
 
 a minimalistic github flavored markdown editor
+
+![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markdown.gif)
 
 ## Download
 
