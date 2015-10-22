@@ -1,8 +1,6 @@
-# David's Markdown Editor
+![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markright-banner.png)
 
-a minimalistic editor for github flavored markdown documents
-
-![screenshot](https://raw.githubusercontent.com/dvcrn/dmedit/master/resources/markdown.gif)
+a minimalistic github flavored markdown editor
 
 ## Download
 

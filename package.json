@@ -1,13 +1,32 @@
 {
-  "name": "dmedit",
-  "version": "0.0.0",
-  "description": "",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-download-electron": "^2.1.2",
-    "closurecompiler-externs": "^1.0.4"
-  },
-  "dependencies": {
-    "marked": "^0.3.5"
-  }
+ "name": "markright",
+	"productName": "MarkRight",
+ "version": "0.1.0",
+	"electronVersion": "0.33.6",
+ "description": "",
+ "devDependencies": {
+		"closurecompiler-externs": "^1.0.4",
+		"electron-packager": "^5.1.0",
+		"grunt": "^0.4.5",
+		"grunt-build-atom-shell": "^2.1.1",
+		"grunt-download-electron": "^2.1.2"
+ },
+ "dependencies": {
+		"marked": "^0.3.5"
+ },
+	"scripts": {
+		"start": "electron app/",
+		"production": "npm run clean && npm run build && npm run package",
+		"clean": "rm -rf ./dist",
+
+		"build": "npm run build-osx && npm run build-win && npm run build-linux",
+		"build-osx": "electron-packager app/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",
+		"build-win": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion",
+		"build-linux": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion",
+
+		"package": "npm run package-win32 && npm run package-win64 && npm run package-osx && npm run package-linux",
+		"package-win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
+		"package-win32": "electron-builder dist/markright-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows32.exe",
+		"package-osx": "electron-builder dist/markright-darwin-x64/MarkRight.app --platform=osx --out=dist --config=config.json"
+	}
 }
