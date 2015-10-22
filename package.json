@@ -16,17 +16,24 @@
  },
 	"scripts": {
 		"start": "electron app/",
-		"production": "npm run clean && npm run build && npm run package",
-		"clean": "rm -rf ./dist",
+		"everything": "npm run clean:dist && npm run clean:source && npm run compile && npm run build && npm run package",
 
-		"build": "npm run build-osx && npm run build-win && npm run build-linux",
-		"build-osx": "electron-packager app/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",
-		"build-win": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion",
-		"build-linux": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion",
+		"clean:dist": "rm -rf ./dist",
+		"clean:source": "rm -rf ./app/js/",
 
-		"package": "npm run package-win32 && npm run package-win64 && npm run package-osx && npm run package-linux",
-		"package-win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
-		"package-win32": "electron-builder dist/markright-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows32.exe",
-		"package-osx": "electron-builder dist/markright-darwin-x64/MarkRight.app --platform=osx --out=dist --config=config.json"
+		"compile": "lein cljsbuild once",
+		"compile:actions": "lein cljsbuild once actions",
+		"compile:main": "lein cljsbuild once main",
+		"compile:frontend": "lein cljsbuild once frontend",
+
+		"build": "npm run build:osx && npm run build:win && npm run build:linux",
+		"build:osx": "electron-packager app/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",
+		"build:win": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion",
+		"build:linux": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion",
+
+		"package": "npm run package:win32 && npm run package:win64 && npm run package:osx",
+		"package:win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
+		"package:win32": "electron-builder dist/markright-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows32.exe",
+		"package:osx": "hdiutil create -format UDZO -srcfolder dist/MarkRight-darwin-x64/MarkRight.app dist/MarkRight_Mac.dmg"
 	}
 }
