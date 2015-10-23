@@ -32,20 +32,14 @@
                                          :elide-asserts true
                                          :target :nodejs
 
-                                         ;; no optimize compile (dev)
-                                         ;;:optimizations :none
-                                         ;; when no optimize uncomment
+                                         ;; DEV
                                          ;;:output-dir "app/js/out"
+                                         ;;:source-map "app/js/test.js.map"
+                                         ;;:pretty-print true
+                                         ;;:output-wrapper true
 
-                                         ;; simple compile (dev)
+                                         ;; PROD
                                          :optimizations :simple
-
-                                         ;; advanced compile (prod)
-                                        ;:optimizations :advanced
-
-                                        ;:source-map "app/js/test.js.map"
-                                         :pretty-print true
-                                         :output-wrapper true
                                          }}
                        :actions {:id "dmedit-actions"
                               :figwheel true
@@ -61,47 +55,37 @@
                                          :elide-asserts true
                                          :target :nodejs
 
-                                         ;; no optimize compile (dev)
+                                         ;; DEV
                                          ;;:optimizations :none
-                                         ;; when no optimize uncomment
                                          ;;:output-dir "app/js/out"
+                                         ;;:source-map "app/js/test.js.map"
+                                         ;;:pretty-print true
+                                         ;;:output-wrapper true
 
-                                         ;; simple compile (dev)
+                                         ;; PROD
                                          :optimizations :simple
-
-                                         ;; advanced compile (prod)
-                                        ;:optimizations :advanced
-
-                                        ;:source-map "app/js/test.js.map"
-                                         :pretty-print true
-                                         :output-wrapper true
                                          }}
                        :frontend {:id "dmedit-om"
-                                  ;; :figwheel true
+                                  ;;:figwheel true
+                                  ;;:source-paths ["src_front" "src_dev"]
                                   :source-paths ["src_front"]
                                   :incremental true
                                   :jar true
                                   :assert true
                                   :compiler {:output-to "app/js/front.js"
-                                             :externs ["app/js/externs.js"]
+                                             :externs ["app/externs.js"]
                                              :warnings true
                                              :elide-asserts true
-                                             ;; :target :nodejs
 
-                                             ;; no optimize compile (dev)
+                                             ;; DEV
+                                             ;;:output-dir "app/js/out"
                                              ;;:optimizations :none
-                                             ;; when no optimize uncomment
-                                             :output-dir "app/js/out"
-
-                                             ;; simple compile (dev)
-                                             ;;:optimizations :simple
-
-                                             ;; advanced compile (prod)
-                                             :optimizations :none
-
                                              ;;:source-map "app/js/test.js.map"
-                                             :pretty-print true
-                                             :output-wrapper true
+                                             ;;:pretty-print true
+                                             ;;:output-wrapper true
+
+                                             ;; PROD
+                                             :optimizations :simple
                                              }}}}
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :figwheel {:http-server-root "public"

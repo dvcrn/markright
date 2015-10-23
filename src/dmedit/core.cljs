@@ -8,7 +8,6 @@
 (def crash-reporter (nodejs/require "crash-reporter"))
 (def dialog (nodejs/require "dialog"))
 (def app (nodejs/require "app"))
-(def actions (nodejs/require "./actions"))
 
 (defn -main []
   (.start crash-reporter)
