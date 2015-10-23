@@ -6,18 +6,31 @@ a minimalistic github flavored markdown editor
 
 ## Download
 
+Check out the [latest release][1] to quickly find the latest version. 
 Here are the current binaries: 
 
-- [Mac](https://github.com/dvcrn/dmedit/releases/download/0.1.0/dmedit.app.zip)
+- [Mac][2]
+- [Windows 32bit][3]
+- [Windows 64bit][4]
 
-(more coming soon...)
+_(wanna contribute a automatic linux build?)_
 
 ## Building
 
 MarkRight is written in clojurescript. To build, make sure you have clojure and leiningen installed on your system. 
 
-1. Clone this project
-2. `npm install` and `bower install`
-3. `lein cljsbuild once` 
+### Requirements
 
-For development, add `src_dev` as `:frontend` source folder and run `lein figwheel` for awesome live coding experience :)
+- `npm install`
+- `bower install`
+
+### Compiling
+All commands you need are available inside `package.json`. To compile the code, run `npm run compile:<prod/dev>`. `app/` is the folder that goes into electron.
+
+`lein figwheel frontend:dev` is available for superior auto reloading of the react frontend. For the backend, `lein cljsbuild auto` should be enough. 
+
+
+[1]: https://github.com/dvcrn/markright/releases/latest/
+[2]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Mac.dmg
+[3]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Windows32.exe
+[4]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Windows64.exe
