@@ -1,4 +1,4 @@
-(defproject dmedit "0.1.0-SNAPSHOT"
+(defproject markright "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -40,7 +40,7 @@
                         :incremental true
                         :jar true
                         :assert true
-                        :compiler {:main dmedit.core
+                        :compiler {:main markright.core
                                    :output-to "app/js/main.js"
                                    :externs ["app/js/externs.js"
                                              "node_modules/closurecompiler-externs/path.js"
@@ -77,7 +77,7 @@
                         :incremental true
                         :jar true
                         :assert true
-                        :compiler {:main dmedit.core
+                        :compiler {:main markright.core
                                    :output-to "app/js/actions.js"
                                    :externs ["app/js/externs.js"
                                              "node_modules/closurecompiler-externs/path.js"
@@ -113,7 +113,7 @@
                         :incremental true
                         :jar true
                         :assert true
-                        :compiler {:main "dmedit_om.core"
+                        :compiler {:main "markright.core"
                                    :output-to "app/js/front.js"
                                    :externs ["app/externs.js"]
                                    :warnings true

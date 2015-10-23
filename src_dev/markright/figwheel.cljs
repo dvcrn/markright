@@ -1,4 +1,4 @@
-(ns dmedit-om.fighweel
+(ns markright.fighweel
   (:require
    [figwheel.client :as fw :include-macros true]))
 

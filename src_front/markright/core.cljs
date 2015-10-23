@@ -1,11 +1,11 @@
-(ns dmedit-om.core
+(ns markright.core
   (:require [om.next :as om :refer-macros [defui]]
             [om.dom :as dom :include-macros true]
             [goog.dom :as gdom]
-            [dmedit-om.parser :as p]
-            [dmedit-om.components.codemirror :as cm]
-            [dmedit-om.components.markdown :as md]
-            [dmedit-om.electron.menu :as menu]))
+            [markright.parser :as p]
+            [markright.components.codemirror :as cm]
+            [markright.components.markdown :as md]
+            [markright.electron.menu :as menu]))
 
 (enable-console-print!)
 (menu/create-menu!)

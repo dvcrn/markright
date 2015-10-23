@@ -1,5 +1,5 @@
-(ns dmedit-om.electron.menu
-  (:require [dmedit-om.parser :as parser]))
+(ns markright.electron.menu
+  (:require [markright.parser :as parser]))
 
 (def remote (js/require "remote"))
 (def menu (.require remote "menu"))
@@ -9,6 +9,7 @@
 (def process (.require remote "process"))
 
 (enable-console-print!)
+
 
 ;; Functions
 (defn reload! []

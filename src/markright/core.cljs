@@ -1,4 +1,4 @@
-(ns dmedit.core
+(ns markright.core
   (:require [cljs.nodejs :as nodejs]))
 
 (def *win* (atom nil))

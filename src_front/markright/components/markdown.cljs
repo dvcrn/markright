@@ -1,4 +1,4 @@
-(ns dmedit-om.components.markdown
+(ns markright.components.markdown
   (:require [om.next :as om :refer-macros [defui]]
             [om.dom :as dom :include-macros true]
             [goog.dom :as gdom])) 

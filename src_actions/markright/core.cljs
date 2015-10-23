@@ -1,4 +1,4 @@
-(ns dmedit.core
+(ns markright.core
   (:require [cljs.nodejs :as nodejs]))
 
 (enable-console-print!)
@@ -32,4 +32,4 @@
 (defn noop [] nil)
 (set! *main-cli-fn* noop)
 
-(aset js/exports "core" dmedit.core)
+(aset js/exports "core" markright.core)
