@@ -8,6 +8,8 @@
 (def shell (.require remote "shell"))
 (def process (.require remote "process"))
 
+(enable-console-print!)
+
 ;; Functions
 (defn reload! []
   (.reload (.getCurrentWindow remote)))

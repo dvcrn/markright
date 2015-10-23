@@ -8,7 +8,6 @@
             [dmedit-om.electron.menu :as menu]))
 
 (enable-console-print!)
-
 (menu/create-menu!)
 
 (defui RootComponent

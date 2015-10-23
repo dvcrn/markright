@@ -31,10 +31,9 @@
        (fn []
          (reset! *win* (BrowserWindow. (clj->js {:width 800 :height 600})))
 
-         ;; when no optimize comment out
-         (.loadUrl @*win* (str "file://" (.resolve path (js* "__dirname") "../index.html")))
-         ;; when no optimize uncomment
-         ;; (.loadUrl @*win* (str "file://" (.resolve path (js* "__dirname") "../../../index.html")))
+         (if (boolean (re-find #"out-main" (js* "__dirname")))
+           (.loadUrl @*win* (str "file://" (.resolve path (js* "__dirname") "../../../index.html")))
+           (.loadUrl @*win* (str "file://" (.resolve path (js* "__dirname") "../index.html"))))
 
          (.on @*win* "closed" (fn [] (reset! *win* nil))))))
 

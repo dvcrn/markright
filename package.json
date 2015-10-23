@@ -16,15 +16,14 @@
  },
 	"scripts": {
 		"start": "electron app/",
-		"everything": "npm run clean:dist && npm run clean:source && npm run compile && npm run build && npm run package",
+		"release": "npm run clean && npm run compile:prod && npm run build && npm run package",
 
+		"clean": "npm run clean:dist && npm run clean:source",
 		"clean:dist": "rm -rf ./dist",
 		"clean:source": "rm -rf ./app/js/",
 
-		"compile": "lein cljsbuild once",
-		"compile:actions": "lein cljsbuild once actions",
-		"compile:main": "lein cljsbuild once main",
-		"compile:frontend": "lein cljsbuild once frontend",
+		"compile:dev": "lein cljsbuild once main:dev frontend:dev actions:dev",
+		"compile:prod": "lein cljsbuild once main:prod frontend:prod actions:prod",
 
 		"build": "npm run build:osx && npm run build:win && npm run build:linux",
 		"build:osx": "electron-packager app/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",

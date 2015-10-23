@@ -17,76 +17,116 @@
   :source-paths ["src_tools"]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {
-              :builds {
-                       :main {:id "dmedit"
-                              :figwheel true
-                              :source-paths ["src"]
-                              :incremental true
-                              :jar true
-                              :assert true
-                              :compiler {:output-to "app/js/main.js"
-                                         :externs ["app/js/externs.js"
-                                                   "node_modules/closurecompiler-externs/path.js"
-                                                   "node_modules/closurecompiler-externs/process.js"]
-                                         :warnings true
-                                         :elide-asserts true
-                                         :target :nodejs
+              :builds [ 
+                       {:id "main:prod"
+                        :source-paths ["src"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:output-to "app/js/main.js"
+                                   :externs ["app/js/externs.js"
+                                             "node_modules/closurecompiler-externs/path.js"
+                                             "node_modules/closurecompiler-externs/process.js"]
+                                   :warnings true
+                                   :elide-asserts true
+                                   :target :nodejs
 
-                                         ;; DEV
-                                         ;;:output-dir "app/js/out"
-                                         ;;:source-map "app/js/test.js.map"
-                                         ;;:pretty-print true
-                                         ;;:output-wrapper true
+                                   :optimizations :simple
+                                   }}
 
-                                         ;; PROD
-                                         :optimizations :simple
-                                         }}
-                       :actions {:id "dmedit-actions"
-                              :figwheel true
-                              :source-paths ["src_actions"]
-                              :incremental true
-                              :jar true
-                              :assert true
-                              :compiler {:output-to "app/js/actions.js"
-                                         :externs ["app/js/externs.js"
-                                                   "node_modules/closurecompiler-externs/path.js"
-                                                   "node_modules/closurecompiler-externs/process.js"]
-                                         :warnings true
-                                         :elide-asserts true
-                                         :target :nodejs
+                       {:id "main:dev"
+                        :figwheel true
+                        :source-paths ["src"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:main dmedit.core
+                                   :output-to "app/js/main.js"
+                                   :externs ["app/js/externs.js"
+                                             "node_modules/closurecompiler-externs/path.js"
+                                             "node_modules/closurecompiler-externs/process.js"]
+                                   :warnings true
+                                   :elide-asserts true
+                                   :target :nodejs
 
-                                         ;; DEV
-                                         ;;:optimizations :none
-                                         ;;:output-dir "app/js/out"
-                                         ;;:source-map "app/js/test.js.map"
-                                         ;;:pretty-print true
-                                         ;;:output-wrapper true
+                                   :output-dir "app/js/out-main/"
+                                   :optimizations :none
+                                   :pretty-print true
+                                   :output-wrapper true
+                                   }}
 
-                                         ;; PROD
-                                         :optimizations :simple
-                                         }}
-                       :frontend {:id "dmedit-om"
-                                  ;;:figwheel true
-                                  ;;:source-paths ["src_front" "src_dev"]
-                                  :source-paths ["src_front"]
-                                  :incremental true
-                                  :jar true
-                                  :assert true
-                                  :compiler {:output-to "app/js/front.js"
-                                             :externs ["app/externs.js"]
-                                             :warnings true
-                                             :elide-asserts true
+                       {:id "actions:prod"
+                        :source-paths ["src_actions"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:output-to "app/js/actions.js"
+                                   :externs ["app/js/externs.js"
+                                             "node_modules/closurecompiler-externs/path.js"
+                                             "node_modules/closurecompiler-externs/process.js"]
+                                   :warnings true
+                                   :elide-asserts true
+                                   :target :nodejs
 
-                                             ;; DEV
-                                             ;;:output-dir "app/js/out"
-                                             ;;:optimizations :none
-                                             ;;:source-map "app/js/test.js.map"
-                                             ;;:pretty-print true
-                                             ;;:output-wrapper true
+                                   :optimizations :simple
+                                   }}
 
-                                             ;; PROD
-                                             :optimizations :simple
-                                             }}}}
+                       {:id "actions:dev"
+                        :figwheel true
+                        :source-paths ["src_actions"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:main dmedit.core
+                                   :output-to "app/js/actions.js"
+                                   :externs ["app/js/externs.js"
+                                             "node_modules/closurecompiler-externs/path.js"
+                                             "node_modules/closurecompiler-externs/process.js"]
+                                   :warnings true
+                                   :elide-asserts true
+                                   :target :nodejs
+
+                                   ;; without optimizations is currently not working
+                                   ;; we need 1 file containing the export directly
+                                   ;;:output-dir "app/js/out-actions"
+                                   :optimizations :simple
+                                   :pretty-print true
+                                   :output-wrapper true
+                                   }}
+
+                       {:id "frontend:prod"
+                        :source-paths ["src_front"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:output-to "app/js/front.js"
+                                   :externs ["app/externs.js"]
+                                   :warnings true
+                                   :elide-asserts true
+
+                                   :optimizations :simple
+                                   }}
+
+                       {:id "frontend:dev"
+                        :figwheel true
+                        :source-paths ["src_front" "src_dev"]
+                        :incremental true
+                        :jar true
+                        :assert true
+                        :compiler {:main "dmedit_om.core"
+                                   :output-to "app/js/front.js"
+                                   :externs ["app/externs.js"]
+                                   :warnings true
+                                   :elide-asserts true
+
+                                   :output-dir "app/js/out-frontend"
+                                   :asset-path "js/out-frontend"
+                                   :optimizations :none
+                                   :pretty-print true
+                                   :output-wrapper true
+                                   }}
+                       ]}
+
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
   :figwheel {:http-server-root "public"
              :ring-handler figwheel-middleware/app
