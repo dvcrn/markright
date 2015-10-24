@@ -4,6 +4,7 @@
  "version": "0.1.0",
 	"electronVersion": "0.33.6",
  "description": "",
+ "main":"app.js",
  "devDependencies": {
 		"closurecompiler-externs": "^1.0.4",
 		"electron-packager": "^5.1.0",

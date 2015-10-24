@@ -8,9 +8,11 @@ pom.xml
 .lein-repl-history
 .lein-plugins/
 node_modules
-electron
 bower_components
-app/js
+node/ui/js
+node/src
+.DS_Store
+.idea
 *.iml
 *.ipr
 *.iws

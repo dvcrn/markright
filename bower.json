@@ -13,6 +13,7 @@
     "tests"
   ],
   "dependencies": {
+    "marked": "^0.3.5",
     "codemirror": "~5.7.0"
   }
 }
