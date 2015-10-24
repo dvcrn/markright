@@ -11,6 +11,7 @@ node_modules
 bower_components
 node/ui/js
 node/src
+node/app.js
 .DS_Store
 .idea
 *.iml
