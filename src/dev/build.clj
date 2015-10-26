@@ -20,16 +20,26 @@
               (node/flush)))))
   :done)
 
-(defn ui-dev []
+(defn ui-setup [opts]
   (-> (cljs/init-state)
       (cljs/set-build-options
         {:public-dir (io/file "node/ui/js")
          :public-path "js"})
+      (cljs/set-build-options opts)
       (cljs/find-resources-in-classpath)
       (cljs/find-resources "src/cljs")
       (cljs/finalize-config)
+      (cljs/configure-module :front '[markright.ui] #{})))
 
-      (cljs/configure-module :front '[markright.ui] #{})
+(defn ui-prod []
+  (-> (ui-setup {:optimizations :simple})
+      (cljs/compile-modules)
+      (cljs/closure-optimize)
+      (cljs/flush-modules-to-disk))
+  :done)
+
+(defn ui-dev []
+  (-> (ui-setup {})
       (devtools/start-loop
         {}))
   :done)

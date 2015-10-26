@@ -11,5 +11,5 @@
                  "src/clj"]
 
   :profiles {:dev {:source-paths ["src/dev"]
-                   :dependencies [[thheller/shadow-devtools "0.1.28"]]}}
+                   :dependencies [[thheller/shadow-devtools "0.1.30"]]}}
   )
