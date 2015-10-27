@@ -188,7 +188,7 @@
          develop
          help]))))
 
-(def index (str "file://" (.resolve path (js* "__dirname") "../../ui/index.html")))
+(def index (str "file://" (.resolve path (.getAppPath app) "ui" "index.html")))
 
 (defn open-window! []
   (when (nil? @*win*)
@@ -200,7 +200,7 @@
       (.on win "closed" (fn [] (reset! *win* nil))))))
 
 (defn main []
-  ;; (.start crash-reporter)
+  (.start crash-reporter)
 
   ;; error listener
   (.on nodejs/process "error"
