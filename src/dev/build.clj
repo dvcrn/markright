@@ -59,3 +59,9 @@
   (-> (ui-setup {})
       (devtools/start-loop {}))
   :done)
+
+
+;; combined
+(defn prod []
+  (ui-prod)
+  (main-prod))
