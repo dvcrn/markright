@@ -16,20 +16,20 @@
 		"marked": "^0.3.5"
  },
 	"scripts": {
-		"start": "electron app/",
+		"start": "electron node/",
 		"release": "npm run clean && npm run compile:prod && npm run build && npm run package",
 
 		"clean": "npm run clean:dist && npm run clean:source",
 		"clean:dist": "rm -rf ./dist",
-		"clean:source": "rm -rf ./app/js/",
+		"clean:source": "rm -rf ./node/ui/js/",
 
-		"compile:dev": "lein cljsbuild once main:dev frontend:dev actions:dev",
-		"compile:prod": "lein cljsbuild once main:prod frontend:prod actions:prod",
+		"compile:dev": "lein run -m build/main-dev && lein run -m build/ui-dev",
+		"compile:prod": "lein run -m build/prod",
 
 		"build": "npm run build:osx && npm run build:win && npm run build:linux",
-		"build:osx": "electron-packager app/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",
-		"build:win": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion",
-		"build:linux": "electron-packager app/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion",
+		"build:osx": "electron-packager node/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion",
+		"build:win": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion",
+		"build:linux": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion",
 
 		"package": "npm run package:win32 && npm run package:win64 && npm run package:osx",
 		"package:win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
