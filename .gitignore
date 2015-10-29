@@ -18,3 +18,5 @@ node/app.js
 *.ipr
 *.iws
 *.log
+dist/
+electron/
