@@ -22,7 +22,7 @@
 
 (def menu (nodejs/require "menu"))
 
-(def app-name "something")
+(def app-name "MarkRight")
 
 ;; Functions
 (defn reload! []
