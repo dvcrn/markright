@@ -2,10 +2,14 @@
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [cljs.nodejs :as nodejs]
             [electron.ipc :as ipc]
-            [cljs.core.async :as async]))
+            [cljs.core.async :as async]
+            [clojure.string :refer [split]])
+  (:import [goog.net XhrIo]))
 
 (def *win* (atom nil))
 
+(def http (nodejs/require "http"))
+(def https (nodejs/require "https"))
 (def path (nodejs/require "path"))
 (def BrowserWindow (nodejs/require "browser-window"))
 (def crash-reporter (nodejs/require "crash-reporter"))
@@ -199,6 +203,45 @@
       (.openDevTools win)
       (.on win "closed" (fn [] (reset! *win* nil))))))
 
+(defn is-newer? [current remote]
+  (let [first (split current #"\.")
+        second (split remote #"\.")
+        weight [10000 1000 100]]
+
+    (->>
+     [first second]
+     (map (fn [group]
+            (map #(->
+                   %
+                   (group)
+                   (js/parseInt)
+                   (* (weight %)))
+                 [0 1 2])))
+     (map #(reduce + %))
+     (reduce >))))
+
+(defn check-update! []
+  (let [package (-> (.readFileSync fs "./package.json" #js {:encoding "utf8"})
+                    (JSON/parse))]
+    ;; xhr call
+    ;; https://raw.githubusercontent.com/dvcrn/markright/master/node/package.json
+    (.end
+     (.request https #js {:host "raw.githubusercontent.com"
+                         :path "/dvcrn/markright/master/node/package.json"
+                         :port 443}
+               (fn [response]
+                 (let [data (atom {:data (str "")})]
+                   (.on response "data" #(swap! data assoc :data (str (@data :data) %)))
+                   (.on response "end" (fn []
+                                         (let [remote-package  (JSON/parse (@data :data))
+                                               latest-version (.-version remote-package)
+                                               current-version (.-version package)]
+                                           (if (is-newer? latest-version current-version)
+                                             (.showMessageBox dialog #js {:type "info"
+                                                                          :title "Update Available"
+                                                                          :message "Hey! There is a new version of MarkRight available. You really should download it :)"
+                                                                          :buttons #js ["Ok!"]})))))))))))
+
 (defn main []
   (.start crash-reporter)
 
@@ -216,4 +259,5 @@
     (fn []
       (create-menu!)
       (open-window!)
+      (check-update!)
       )))
