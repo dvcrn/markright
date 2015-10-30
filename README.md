@@ -21,13 +21,23 @@ MarkRight is written in clojurescript. To build, make sure you have clojure and 
 
 ### Requirements
 
+- `npm`
+- `leiningen`
+- `bower`
 - `npm install`
 - `bower install`
 
 ### Compiling
 All commands you need are available inside `package.json`. To compile the code, run `npm run compile:<prod/dev>`. `app/` is the folder that goes into electron.
 
-`lein figwheel frontend:dev` is available for superior auto reloading of the react frontend. For the backend, `lein cljsbuild auto` should be enough. 
+### Development
+
+To develop, run the self-reloading build:
+
+- `lein run -m build/ui-dev`
+- `lein run -m build/main-dev`
+
+shadow-build will live-reload the frontend so you don't need to refresh. If you change `main.cljs` however, you'll have to restart electron to reload your changes.
 
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
