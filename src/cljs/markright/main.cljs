@@ -53,22 +53,29 @@
                                     :extensions ["*"]}]})))
         content (.readFileSync fs file #js {:encoding "utf8"})]
 
-    (ipc/cast :set-current-file {:file file
-                                 :content content}))
-
-  )
+    (ipc/cast :load-file {:file file
+                          :content content})))
 
 (defn save-file-as! []
-  (js/console.log "FIXME: save-file-as!"))
+  (go (let [file-path (save-dialog)
+            content (<! (ipc/call :get-current-content {}))]
+         (if (not (nil? save-dialog))
+           (do
+             (write-file file-path content)
+             (ipc/cast :set-current-file {:file file-path
+                                          :content content}))))))
 
 (defn save-file! []
-  (go (let [content (<! (ipc/call :get-current-content {}))]
-        (js/console.log "save-file!" content)
-        )))
+  (go (let [content (<! (ipc/call :get-current-content {}))
+            filepath (<! (ipc/call :get-current-file {}))]
+        (.-length filepath)
+        (if (= 0 (.-length filepath))
+          (save-file-as!)
+          (write-file filepath content)))))
 
 ;; Menu structure
 (def dmedit
-  {:label "dmedit"
+  {:label "MarkRight"
    :submenu
    [{:label (str "About " app-name)
      :role "about"}

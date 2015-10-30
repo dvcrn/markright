@@ -17,7 +17,7 @@
 
   (componentWillReceiveProps [this next-props]
     (let [{:keys [app/filepath app/text]} next-props]
-      (if (not (nil? filepath))
+      (if (not (= 0 (.-length filepath)))
         (set! (.-title js/document) filepath))))
 
   (render [this]
