@@ -41,6 +41,6 @@ shadow-build will live-reload the frontend so you don't need to refresh. If you 
 
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
-[2]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Mac.dmg
-[3]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Windows32.exe
-[4]: https://github.com/dvcrn/markright/releases/download/0.1.1/MarkRight_Windows64.exe
+[2]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Mac.dmg
+[3]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows32.exe
+[4]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows64.exe
