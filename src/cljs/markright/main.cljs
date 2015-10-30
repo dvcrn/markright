@@ -50,16 +50,15 @@
                          :filters [{:name "Markdown"
                                     :extensions ["md" "markdown" "txt"]}
                                    {:name "All Files"
-                                    :extensions ["*"]}]})))
-        content (.readFileSync fs file #js {:encoding "utf8"})]
-
-    (ipc/cast :load-file {:file file
-                          :content content})))
+                                    :extensions ["*"]}]})))]
+    (if (not (nil? file))
+      (ipc/cast :load-file {:file file
+                            :content (.readFileSync fs file #js {:encoding "utf8"})}))))
 
 (defn save-file-as! []
   (go (let [file-path (save-dialog)
             content (<! (ipc/call :get-current-content {}))]
-         (if (not (nil? save-dialog))
+         (if (not (nil? file-path))
            (do
              (write-file file-path content)
              (ipc/cast :set-current-file {:file file-path
