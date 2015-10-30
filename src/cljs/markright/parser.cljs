@@ -1,9 +1,16 @@
 (ns markright.parser
+  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [om.next :as om :refer-macros [defui]]
             [electron.ipc :as ipc]
-            ))
+            [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
 
-(def app-state (atom {:app/text "## Welcome to MarkRight\n\n![logo][1]\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)\n\n\n[1]: https://raw.githubusercontent.com/dvcrn/markright/master/resources/markright-banner.png" :app/force-overwrite false :app/filepath "" :app/saved-text "nil"}))
+(defonce app-state (atom {:app/text "## Welcome to MarkRight\n\n![logo][1]\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)\n\n\n[1]: https://raw.githubusercontent.com/dvcrn/markright/master/resources/markright-banner.png"
+                      :app/force-overwrite false
+                      :app/filepath ""
+                      :app/saved-text ""}))
+
+(defonce root-channel
+  (chan))
 
 (defmulti read om/dispatch)
 (defmethod read :default
@@ -23,12 +30,16 @@
 (defmethod mutate 'app/text
   [{:keys [state]} _ {:keys [text]}]
   {:value [:app/text]
-   :action (swap! state assoc-in [:app/text] text)})
+   :action #(swap! state assoc-in [:app/text] text)})
 
 (defmethod mutate 'app/transact-overwrite
   [{:keys [state]} _ {:keys [text]}]
   {:value [:app/force-overwrite]
-   :action (swap! state assoc-in [:app/force-overwrite] false)})
+   :action #(swap! state assoc-in [:app/force-overwrite] false)})
+
+(defmethod mutate 'app/reset-saved-text
+  [{:keys [state]} _ _]
+  {:action #(swap! state assoc-in [:app/saved-text] (@state :app/text))})
 
 (def reconciler
   (om/reconciler
@@ -56,6 +67,10 @@
   (swap! app-state assoc
          :app/saved-text content
          :app/filepath file))
+
+(defmethod ipc/process-cast :set-saved-content
+  [{:keys [content]}]
+  (go (>! root-channel #(om/transact! % `[(app/reset-saved-text)]))))
 
 (comment
   (let [content]

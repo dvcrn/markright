@@ -71,7 +71,9 @@
         (.-length filepath)
         (if (= 0 (.-length filepath))
           (save-file-as!)
-          (write-file filepath content)))))
+          (do
+            (write-file filepath content)
+            (ipc/cast :set-saved-content {:content content}))))))
 
 ;; Menu structure
 (def dmedit

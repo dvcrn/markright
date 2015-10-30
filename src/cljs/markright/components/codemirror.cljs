@@ -15,36 +15,37 @@
 (defui CodemirrorComponent
   Object
   (render [this]
-    (dom/div #js {:id "codemirror-target"}))
-  (componentWillReceiveProps [this next-props]
-    (let [{:keys [app/force-overwrite app/text]} next-props]
-      ;; Ignore overwriting if force-overwrite is not true
-      ;; This is because the cursor would jump if we overwrite
-      ;; the entire thing with every keypress. Not good, no no
-      (if force-overwrite
-        (do
-          (.setValue (.getDoc (@local-state :codemirror)) text)
-          ((@local-state :overwrite-callback))))))
+          (let [{:keys [app/force-overwrite app/text]} (om/props this)]
+            ;; Ignore overwriting if force-overwrite is not true
+            ;; This is because the cursor would jump if we overwrite
+            ;; the entire thing with every keypress. Not good, no no
+            (if force-overwrite
+              (do
+                (.setValue (.getDoc (@local-state :codemirror)) text)
+                ((@local-state :overwrite-callback)))))
+
+          (dom/div #js {:id "codemirror-target"}))
+
   (componentDidMount [this]
-    (let [codemirror
-          (js/CodeMirror (gdom/getElement "codemirror-target")
-            #js {:matchBrackets true
-                 :mode "gfm"
-                 :autoCloseBrackets true
-                 :lineWrapping true
-                 :lineNumbers true
-                 })]
-      (swap! local-state assoc :codemirror codemirror)
+                     (let [codemirror
+                           (js/CodeMirror (gdom/getElement "codemirror-target")
+                                          #js {:matchBrackets true
+                                               :mode "gfm"
+                                               :autoCloseBrackets true
+                                               :lineWrapping true
+                                               :lineNumbers true
+                                               })]
+                       (swap! local-state assoc :codemirror codemirror)
 
-      (let [{:keys [app/text text-callback overwrite-callback]} (om/props this)]
-        (swap! local-state assoc :overwrite-callback overwrite-callback)
-        (.setValue (.getDoc codemirror) text)
-        (.on codemirror "change"
-          #(text-callback (.getValue codemirror)))))
+                       (let [{:keys [app/text text-callback overwrite-callback]} (om/props this)]
+                         (swap! local-state assoc :overwrite-callback overwrite-callback)
+                         (.setValue (.getDoc codemirror) text)
+                         (.on codemirror "change"
+                              #(text-callback (.getValue codemirror)))))
 
-    (.addEventListener js/window "resize" fill-codemirror)
-    (fill-codemirror nil))
+                     (.addEventListener js/window "resize" fill-codemirror)
+                     (fill-codemirror nil))
   (componentWillUnmount [this]
-    (.removeEventListener js/window "resize" fill-codemirror)))
+                        (.removeEventListener js/window "resize" fill-codemirror)))
 
 (def codemirror (om/factory CodemirrorComponent))
