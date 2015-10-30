@@ -208,8 +208,9 @@
       (reset! *win* win)
       (.loadUrl win index)
       (ipc/set-target! win)
-      (.openDevTools win)
-      (.on win "closed" (fn [] (reset! *win* nil))))))
+      ;; (.openDevTools win)
+      (.on win "closed" (fn [] (reset! *win* nil)))
+      (.on win "close" (fn [] (println "before close"))))))
 
 (defn is-newer? [current remote]
   (let [first (split current #"\.")
@@ -257,7 +258,6 @@
   (.on nodejs/process "error"
     (fn [err] (.log js/console err)))
 
-  ;; window all closed listener
   (.on app "window-all-closed"
     (fn [] (if (not= (.-platform nodejs/process) "darwin")
              (.quit app))))
