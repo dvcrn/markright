@@ -28,7 +28,7 @@ MarkRight is written in clojurescript. To build, make sure you have clojure and 
 - `bower install`
 
 ### Compiling
-All commands you need are available inside `package.json`. To compile the code, run `npm run compile:<prod/dev>`. `app/` is the folder that goes into electron.
+All commands you need are available inside `package.json`. To compile the code, run `npm run compile:<prod/dev>`. `node/` is the folder that goes into electron.
 
 ### Development
 
