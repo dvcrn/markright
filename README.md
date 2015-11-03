@@ -39,8 +39,12 @@ To develop, run the self-reloading build:
 
 shadow-build will live-reload the frontend so you don't need to refresh. If you change `main.cljs` however, you'll have to restart electron to reload your changes.
 
+## License
+
+Licensed under [GPLv3][5]
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
 [2]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Mac.dmg
 [3]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows32.exe
 [4]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows64.exe
+[5]: http://www.gnu.org/licenses/gpl-3.0.txt
