@@ -3,17 +3,16 @@
   (:require [cljs.nodejs :as nodejs]
             [electron.ipc :as ipc]
             [cljs.core.async :as async]
-            [clojure.string :refer [split]])
+            [clojure.string :refer [split]]
+            [markright.dialogs :refer [unsaved-changes-dialog save-dialog open-dialog update-dialog]])
   (:import [goog.net XhrIo]))
 
 (def *win* (atom nil))
 
-(def http (nodejs/require "http"))
 (def https (nodejs/require "https"))
 (def path (nodejs/require "path"))
 (def BrowserWindow (nodejs/require "browser-window"))
 (def crash-reporter (nodejs/require "crash-reporter"))
-(def dialog (nodejs/require "dialog"))
 
 (def app (nodejs/require "app"))
 (def shell (nodejs/require "shell"))
@@ -37,26 +36,14 @@
 (defn write-file [filepath content]
   (.writeFileSync fs filepath content #js {:encoding "utf8"}))
 
-(defn save-dialog []
-  (.showSaveDialog dialog #js
-      {:filters #js [#js {:name "All Files"
-                          :extensions #js ["*"]}]}))
-
 (defn open-file! []
-  (let [file (first (.showOpenDialog dialog
-                      ;; way too many #js for my taste
-                      (clj->js
-                        {:properties ["openFile"]
-                         :filters [{:name "Markdown"
-                                    :extensions ["md" "markdown" "txt"]}
-                                   {:name "All Files"
-                                    :extensions ["*"]}]})))]
+  (let [file (first (open-dialog @*win*))]
     (if (not (nil? file))
       (ipc/cast :load-file {:file file
                             :content (.readFileSync fs file #js {:encoding "utf8"})}))))
 
 (defn save-file-as! []
-  (go (let [file-path (save-dialog)
+  (go (let [file-path (save-dialog @*win*)
             content (<! (ipc/call :get-current-content {}))]
          (if (not (nil? file-path))
            (do
@@ -213,14 +200,7 @@
       (.on win "close" (fn [e]
                          (.preventDefault e)
                          (go (let [is-saved? (<! (ipc/call :get-is-saved {}))
-                                   confirm (if is-saved?
-                                             0
-                                             (.showMessageBox dialog
-                                                              @*win*
-                                                              #js {:type "question"
-                                                                          :title "Unsaved changes"
-                                                                          :message "There are unsaved changes. Are you sure you want to close this window?"
-                                                                          :buttons #js ["Close" "Cancel"]}))]
+                                   confirm (if is-saved? 0 (unsaved-changes-dialog @*win*))]
                                (if (= confirm 0)
                                  (.destroy @*win*))
                                )))))))
@@ -256,10 +236,7 @@
                                        (let [remote-package  (JSON/parse (@data :data))
                                              latest-version (.-version remote-package)]
                                          (if (is-newer? latest-version (.getVersion app))
-                                           (.showMessageBox dialog #js {:type "info"
-                                                                        :title "Update Available"
-                                                                        :message "Hey! There is a new version of MarkRight available. You really should download it :)"
-                                                                        :buttons #js ["Ok!"]}))))))))))
+                                           (update-dialog @*win*))))))))))
 
 (defn main []
   (.start crash-reporter)
