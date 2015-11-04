@@ -5,9 +5,9 @@
             [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
 
 (defonce app-state (atom {:app/text "## Welcome to MarkRight\n\n![logo][1]\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)\n\n\n[1]: https://raw.githubusercontent.com/dvcrn/markright/master/resources/markright-banner.png"
-                      :app/force-overwrite false
-                      :app/filepath ""
-                      :app/saved-text ""}))
+                          :app/force-overwrite false
+                          :app/filepath ""
+                          :app/saved-text ""}))
 
 (defonce root-channel
   (chan))
@@ -53,6 +53,10 @@
 (defmethod ipc/process-call :get-current-content
   [msg reply]
   (reply (get @app-state :app/text)))
+
+(defmethod ipc/process-call :get-is-saved
+  [msg reply]
+  (reply (= (get @app-state :app/saved-text) (get @app-state :app/text))))
 
 (defmethod ipc/process-cast :load-file
   [{:keys [file content]}]

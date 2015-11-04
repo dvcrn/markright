@@ -210,7 +210,20 @@
       (ipc/set-target! win)
       ;; (.openDevTools win)
       (.on win "closed" (fn [] (reset! *win* nil)))
-      (.on win "close" (fn [] (println "before close"))))))
+      (.on win "close" (fn [e]
+                         (.preventDefault e)
+                         (go (let [is-saved? (<! (ipc/call :get-is-saved {}))
+                                   confirm (if is-saved?
+                                             0
+                                             (.showMessageBox dialog
+                                                              @*win*
+                                                              #js {:type "question"
+                                                                          :title "Unsaved changes"
+                                                                          :message "There are unsaved changes. Are you sure you want to close this window?"
+                                                                          :buttons #js ["Close" "Cancel"]}))]
+                               (if (= confirm 0)
+                                 (.destroy @*win*))
+                               )))))))
 
 (defn is-newer? [current remote]
   (let [first (split current #"\.")
@@ -264,5 +277,4 @@
     (fn []
       (create-menu!)
       (open-window!)
-      (check-update!)
-      )))
+      (check-update!))))
