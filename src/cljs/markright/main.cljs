@@ -132,7 +132,7 @@
 
     {:label "Cut"
      :accelerator "CmdOrCtrl+X"
-     :role "Cut"}
+     :role "cut"}
 
     {:label "Select All"
      :accelerator "CmdOrCtrl+A"
