@@ -27,10 +27,10 @@
                                 :extensions ["*"]}]})))
 
 
-(defn update-dialog [win]
+(defn update-dialog [win current-version latest-version]
   (.showMessageBox dialog
                    win
                    #js {:type "info"
                         :title "Update Available"
-                        :message "Hey! There is a new version of MarkRight available. You really should download it :)"
-                        :buttons #js ["Ok!"]}))
+                        :message (str "Hi! MarkRight " latest-version " is available. You are currently running " current-version ".")
+                        :buttons #js ["Ok" "Go to download"]}))

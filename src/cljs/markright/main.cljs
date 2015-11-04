@@ -236,7 +236,8 @@
                                        (let [remote-package  (JSON/parse (@data :data))
                                              latest-version (.-version remote-package)]
                                          (if (is-newer? latest-version (.getVersion app))
-                                           (update-dialog @*win*))))))))))
+                                           (if (= (update-dialog @*win* (.getVersion app) latest-version) 1)
+                                             (.openExternal shell "https://github.com/dvcrn/markright/releases/latest")))))))))))
 
 (defn main []
   (.start crash-reporter)
