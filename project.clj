@@ -15,5 +15,5 @@
 
   :profiles {:dev {:source-paths ["src/dev"]
                    :dependencies [[thheller/shadow-devtools "0.1.31"]
-                                  [thheller/shadow-build "1.0.153"]]}}
+                                  [thheller/shadow-build "1.0.160"]]}}
   )
