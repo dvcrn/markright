@@ -12,8 +12,8 @@ Here are the current binaries:
 - [Mac][2]
 - [Windows 32bit][3]
 - [Windows 64bit][4]
-
-_(wanna contribute a automatic linux build?)_
+- [Linux ia32][5] _(untested)_
+- [Linux x64][6] _(untested)_
 
 ## Building
 
@@ -41,10 +41,12 @@ shadow-build will live-reload the frontend so you don't need to refresh. If you 
 
 ## License
 
-Licensed under [GPLv3][5]
+Licensed under [GPLv3][7]
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
-[2]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Mac.dmg
-[3]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows32.exe
-[4]: https://github.com/dvcrn/markright/releases/download/0.1.2/MarkRight_Windows64.exe
-[5]: http://www.gnu.org/licenses/gpl-3.0.txt
+[2]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Mac.dmg
+[3]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Windows32.exe
+[4]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Windows64.exe
+[5]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_x64.zip
+[6]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_ia32.zip
+[7]: http://www.gnu.org/licenses/gpl-3.0.txt
