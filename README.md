@@ -47,6 +47,6 @@ Licensed under [GPLv3][7]
 [2]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Mac.dmg
 [3]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Windows32.exe
 [4]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Windows64.exe
-[5]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_x64.zip
-[6]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_ia32.zip
+[5]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_ia32.zip
+[6]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_x64.zip
 [7]: http://www.gnu.org/licenses/gpl-3.0.txt
