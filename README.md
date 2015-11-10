@@ -6,7 +6,12 @@ a minimalistic github flavored markdown editor
 
 ## Download
 
-Check out the [latest release][1] to quickly find the latest version. 
+On mac, install it through [cask][8]:
+```
+brew cask install markright
+```
+
+Alternatively, check out the [latest release][1] to quickly find the latest version. 
 Here are the current binaries: 
 
 - [Mac][2]
@@ -50,3 +55,4 @@ Licensed under [GPLv3][7]
 [5]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_ia32.zip
 [6]: https://github.com/dvcrn/markright/releases/download/0.1.3/MarkRight_Linux_x64.zip
 [7]: http://www.gnu.org/licenses/gpl-3.0.txt
+[8]: http://caskroom.io/
