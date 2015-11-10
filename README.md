@@ -49,10 +49,10 @@ shadow-build will live-reload the frontend so you don't need to refresh. If you 
 Licensed under [GPLv3][7]
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
-[2]: https://github.com/dvcrn/markright/releases/download/0.1.4/MarkRight_Mac.dmg
-[3]: https://github.com/dvcrn/markright/releases/download/0.1.4/MarkRight_Windows32.exe
-[4]: https://github.com/dvcrn/markright/releases/download/0.1.4/MarkRight_Windows64.exe
-[5]: https://github.com/dvcrn/markright/releases/download/0.1.4/MarkRight_Linux_ia32.zip
-[6]: https://github.com/dvcrn/markright/releases/download/0.1.4/MarkRight_Linux_x64.zip
+[2]: https://github.com/dvcrn/markright/releases/download/0.1.5/MarkRight_Mac.dmg
+[3]: https://github.com/dvcrn/markright/releases/download/0.1.5/MarkRight_Windows32.exe
+[4]: https://github.com/dvcrn/markright/releases/download/0.1.5/MarkRight_Windows64.exe
+[5]: https://github.com/dvcrn/markright/releases/download/0.1.5/MarkRight_Linux_ia32.zip
+[6]: https://github.com/dvcrn/markright/releases/download/0.1.5/MarkRight_Linux_x64.zip
 [7]: http://www.gnu.org/licenses/gpl-3.0.txt
 [8]: http://caskroom.io/
