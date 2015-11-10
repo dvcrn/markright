@@ -226,19 +226,21 @@
 (defn check-update! []
   ;; xhr call
   ;; https://raw.githubusercontent.com/dvcrn/markright/master/node/package.json
-  (.end
-   (.request https #js {:host "raw.githubusercontent.com"
-                        :path "/dvcrn/markright/master/node/package.json"
-                        :port 443}
-             (fn [response]
-               (let [data (atom {:data (str "")})]
-                 (.on response "data" #(swap! data assoc :data (str (@data :data) %)))
-                 (.on response "end" (fn []
-                                       (let [remote-package  (JSON/parse (@data :data))
-                                             latest-version (.-version remote-package)]
-                                         (if (is-newer? latest-version (.getVersion app))
-                                           (if (= (update-dialog @*win* (.getVersion app) latest-version) 1)
-                                             (.openExternal shell "https://github.com/dvcrn/markright/releases/latest")))))))))))
+  (let [request (.request https #js {:host "raw.githubusercontent.com"
+                                     :path "/dvcrn/markright/master/node/package.json"
+                                     :port 443}
+                          (fn [response]
+                            (let [data (atom {:data (str "")})]
+                              (.on response "data" #(swap! data assoc :data (str (@data :data) %)))
+                              (.on response "end" (fn []
+                                                    (let [remote-package  (JSON/parse (@data :data))
+                                                          latest-version (.-version remote-package)]
+                                                      (if (is-newer? latest-version (.getVersion app))
+                                                        (if (= (update-dialog @*win* (.getVersion app) latest-version) 1)
+                                                          (.openExternal shell "https://github.com/dvcrn/markright/releases/latest")))))))))]
+    (.on request "error" #(.log js/console "Couldn't check for update."))
+    (.end request)
+    ))
 
 (defn main []
   (.start crash-reporter)
