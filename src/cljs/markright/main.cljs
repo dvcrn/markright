@@ -179,13 +179,14 @@
     menu
     (.buildFromTemplate menu
       (clj->js
-        [(when (= (.-platform process) "darwin")
-           dmedit)
-         file
+       (concat
+        (if (= (.-platform process) "darwin")
+          [dmedit] [])
+        [file
          edit
          window
          develop
-         help]))))
+         help])))))
 
 (def index (str "file://" (.resolve path (.getAppPath app) "ui" "index.html")))
 
