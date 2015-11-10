@@ -233,7 +233,7 @@
                             (let [data (atom {:data (str "")})]
                               (.on response "data" #(swap! data assoc :data (str (@data :data) %)))
                               (.on response "end" (fn []
-                                                    (let [remote-package  (JSON/parse (@data :data))
+                                                    (let [remote-package  (.parse js/JSON (@data :data))
                                                           latest-version (.-version remote-package)]
                                                       (if (is-newer? latest-version (.getVersion app))
                                                         (if (= (update-dialog @*win* (.getVersion app) latest-version) 1)
