@@ -14,7 +14,8 @@
 (defn parse-codeblocks! []
   (let [tags (.getElementsByTagName js/document "code")]
     (doseq [tag (array-seq tags)]
-      (.highlightBlock js/hljs tag))))
+      (if (.getAttribute tag "class")
+        (.highlightBlock js/hljs tag)))))
 
 (defn parse-urls! []
   (let [a-tags (.getElementsByTagName js/document "a")]
