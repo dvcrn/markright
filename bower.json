@@ -13,7 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "marked": "^0.3.5",
+    "marked": "git@github.com:dvcrn/marked.git#checkbox-support",
     "codemirror": "~5.7.0"
   }
 }

@@ -13,7 +13,7 @@
     "grunt-download-electron": "^2.1.2"
   },
   "dependencies": {
-    "marked": "^0.3.5"
+    "marked": "git@github.com/dvcrn/marked.git#checkbox-support"
   },
   "scripts": {
     "start": "electron node/",
