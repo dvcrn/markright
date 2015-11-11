@@ -20,6 +20,14 @@ Here are the current binaries:
 - [Linux ia32][5] _(untested)_
 - [Linux x64][6] _(untested)_
 
+### Command line
+
+On mac, you can launch markright from the command line with a little alias: 
+```
+alias markright="open -a /Applications/MarkRight.app"
+markright README.md
+```
+
 ## Building
 
 MarkRight is written in clojurescript. To build, make sure you have clojure and leiningen installed on your system. 
