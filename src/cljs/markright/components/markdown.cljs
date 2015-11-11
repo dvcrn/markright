@@ -11,6 +11,11 @@
 (defn generate-open-external-string [url]
   (str "require('shell').openExternal('" (js/decodeURIComponent url) "')"))
 
+(defn parse-codeblocks! []
+  (let [tags (.getElementsByTagName js/document "code")]
+    (doseq [tag (array-seq tags)]
+      (.highlightBlock js/hljs tag))))
+
 (defn parse-urls! []
   (let [a-tags (.getElementsByTagName js/document "a")]
      (doseq [tag (array-seq a-tags)]
@@ -29,8 +34,10 @@
   (componentWillUnmount [this]
                         (.removeEventListener js/window "resize" fill-markdown))
   (componentDidMount [this]
-                     (parse-urls!))
+                     (parse-urls!)
+                     (parse-codeblocks!))
   (componentDidUpdate [this prev-props prev-state]
-                     (parse-urls!)))
+                      (parse-urls!)
+                      (parse-codeblocks!)))
 
 (def markdown (om/factory MarkdownComponent))

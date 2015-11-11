@@ -13,7 +13,8 @@
     "tests"
   ],
   "dependencies": {
-    "marked": "git@github.com:dvcrn/marked.git#checkbox-support",
-    "codemirror": "~5.7.0"
+    "codemirror": "~5.7.0",
+    "highlightjs": "~8.9.1",
+    "marked": "git@github.com:dvcrn/marked.git#checkbox-support"
   }
 }

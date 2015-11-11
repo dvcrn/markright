@@ -8,6 +8,8 @@
             [markright.components.markdown :as md]
             [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
 
+(.initHighlightingOnLoad js/hljs)
+
 (defui RootComponent
   static om/IQuery
   (query [this]
