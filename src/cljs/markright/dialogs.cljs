@@ -8,8 +8,8 @@
                    win
                    #js {:type "question"
                         :title "Unsaved changes"
-                        :message "There are unsaved changes. Are you sure you want to close this window?"
-                        :buttons #js ["Close" "Cancel"]}))
+                        :message "There are unsaved changes. Are you sure you want to continue? Your changes will be lost."
+                        :buttons #js ["Continue" "Cancel"]}))
 
 (defn save-dialog [win]
   (.showSaveDialog dialog

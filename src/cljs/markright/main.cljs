@@ -1,6 +1,7 @@
 (ns markright.main
   (:require-macros [cljs.core.async.macros :refer (go)])
-  (:require [cljs.nodejs :as nodejs]
+  (:require [cljs.core.async :refer [<!]]
+            [cljs.nodejs :as nodejs]
             [electron.ipc :as ipc]
             [cljs.core.async :as async]
             [clojure.string :refer [split]]
@@ -33,24 +34,30 @@
 (defn open-url! [url]
   (.openExternal shell url))
 
-(defn write-file [filepath content]
+(defn write-file! [filepath content]
   (.writeFileSync fs filepath content #js {:encoding "utf8"}))
+
+(defn verify-unsaved-changes []
+  (go (let [is-saved? (<! (ipc/call :get-is-saved {}))
+            confirm (if is-saved? 0 (unsaved-changes-dialog @*win*))]
+        (if (= confirm 0) true false))))
 
 (defn load-file! [filepath]
   (ipc/cast :load-file {:file filepath
                         :content (.readFileSync fs filepath #js {:encoding "utf8"})}))
 
 (defn open-file! []
-  (let [file (first (open-dialog @*win*))]
-    (if (not (nil? file))
-      (load-file! file))))
+  (go (if (<! (verify-unsaved-changes))
+        (let [file (first (open-dialog @*win*))]
+          (if (not (nil? file))
+            (load-file! file))))))
 
 (defn save-file-as! []
   (go (let [file-path (save-dialog @*win*)
             content (<! (ipc/call :get-current-content {}))]
          (if (not (nil? file-path))
            (do
-             (write-file file-path content)
+             (write-file! file-path content)
              (ipc/cast :set-current-file {:file file-path
                                           :content content}))))))
 
@@ -61,7 +68,7 @@
         (if (= 0 (.-length filepath))
           (save-file-as!)
           (do
-            (write-file filepath content)
+            (write-file! filepath content)
             (ipc/cast :set-saved-content {:content content}))))))
 
 ;; Menu structure
@@ -203,11 +210,8 @@
       (.on win "closed" (fn [] (reset! *win* nil)))
       (.on win "close" (fn [e]
                          (.preventDefault e)
-                         (go (let [is-saved? (<! (ipc/call :get-is-saved {}))
-                                   confirm (if is-saved? 0 (unsaved-changes-dialog @*win*))]
-                               (if (= confirm 0)
-                                 (.destroy @*win*))
-                               )))))))
+                         (go (if (<! (verify-unsaved-changes))
+                               (.destroy @*win*))))))))
 
 (defn is-newer? [current remote]
   (let [first (split current #"\.")
@@ -256,7 +260,10 @@
     (fn [] (if (not= (.-platform nodejs/process) "darwin")
              (.quit app))))
 
-  (.on app "open-file" #(if %2 (do (load-file! %2) (.preventDefault %1))))
+  (.on app "open-file" #(if %2
+                          (do
+                            (go (if (<! (verify-unsaved-changes)) (load-file! %2)))
+                            (.preventDefault %1))))
   (.on app "activate" open-window!)
   (.on app "ready"
     (fn []
