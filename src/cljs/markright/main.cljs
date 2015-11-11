@@ -36,11 +36,14 @@
 (defn write-file [filepath content]
   (.writeFileSync fs filepath content #js {:encoding "utf8"}))
 
+(defn load-file! [filepath]
+  (ipc/cast :load-file {:file filepath
+                        :content (.readFileSync fs filepath #js {:encoding "utf8"})}))
+
 (defn open-file! []
   (let [file (first (open-dialog @*win*))]
     (if (not (nil? file))
-      (ipc/cast :load-file {:file file
-                            :content (.readFileSync fs file #js {:encoding "utf8"})}))))
+      (load-file! file))))
 
 (defn save-file-as! []
   (go (let [file-path (save-dialog @*win*)
@@ -253,6 +256,7 @@
     (fn [] (if (not= (.-platform nodejs/process) "darwin")
              (.quit app))))
 
+  (.on app "open-file" #(if %2 (do (load-file! %2) (.preventDefault %1))))
   (.on app "activate" open-window!)
   (.on app "ready"
     (fn []
