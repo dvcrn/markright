@@ -28,9 +28,16 @@
 (defn parse-images! [current-path]
   (let [img-tags (.getElementsByTagName js/document "img")]
     (doseq [tag (array-seq img-tags)]
+      ;; To make sure we always use the real path for transforming
+      ;; and not the already transformed one
       (if (not (.getAttribute tag "data-src"))
         (.setAttribute tag "data-src" (.getAttribute tag "src")))
       (.setAttribute tag "src" (str "file://" current-path "/" (.getAttribute tag "data-src"))))))
+
+(defn post-render! []
+  (parse-urls!)
+  (parse-codeblocks!)
+  (parse-images! @current-path))
 
 (defui MarkdownComponent
   Object
@@ -40,17 +47,9 @@
             (dom/div #js {:id "parsed-markdown"}
                      (dom/div #js {:className "markdown-body"
                                    :dangerouslySetInnerHTML #js {:__html html}}))))
-  (componentWillMount [this]
-                      (.addEventListener js/window "resize" fill-markdown))
-  (componentWillUnmount [this]
-                        (.removeEventListener js/window "resize" fill-markdown))
-  (componentDidMount [this]
-                     (parse-urls!)
-                     (parse-codeblocks!)
-                     (parse-images! @current-path))
-  (componentDidUpdate [this prev-props prev-state]
-                      (parse-urls!)
-                      (parse-codeblocks!)
-                      (parse-images! @current-path)))
+  (componentWillMount [this] (.addEventListener js/window "resize" fill-markdown))
+  (componentWillUnmount [this] (.removeEventListener js/window "resize" fill-markdown))
+  (componentDidMount [this] (post-render!))
+  (componentDidUpdate [this prev-props prev-state] (post-render!)))
 
 (def markdown (om/factory MarkdownComponent))
