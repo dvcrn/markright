@@ -52,6 +52,10 @@
           (if (not (nil? file))
             (load-file! file))))))
 
+(defn quit-app! []
+  (go (if (<! (verify-unsaved-changes))
+        (.exit app))))
+
 (defn save-file-as! []
   (go (let [file-path (save-dialog @*win*)
             content (<! (ipc/call :get-current-content {}))]
@@ -72,7 +76,7 @@
             (ipc/cast :set-saved-content {:content content}))))))
 
 ;; Menu structure
-(def dmedit
+(def markright
   {:label "MarkRight"
    :submenu
    [{:label (str "About " app-name)
@@ -101,7 +105,8 @@
 
     {:label "Quit"
      :accelerator "CmdOrCtrl+Q"
-     :selector "terminate:"}]})
+     :click quit-app!
+     }]})
 
 (def file
   {:label "File"
@@ -178,8 +183,8 @@
   {:label "Help"
    :role "help"
    :submenu
-   [{:label "dmedit on Github"
-     :click #(open-url! "https://github.com/dvcrn/dmedit")}
+   [{:label "MarkRight on Github"
+     :click #(open-url! "https://github.com/dvcrn/markright")}
     {:label "@davicorn (Twitter)"
      :click #(open-url! "https://twitter.com/davicorn")}
     ]})
@@ -191,7 +196,7 @@
       (clj->js
        (concat
         (if (= (.-platform process) "darwin")
-          [dmedit] [])
+          [markright] [])
         [file
          edit
          window
