@@ -38,9 +38,12 @@
   (.writeFileSync fs filepath content #js {:encoding "utf8"}))
 
 (defn verify-unsaved-changes []
-  (go (let [is-saved? (<! (ipc/call :get-is-saved {}))
+  (go
+    (if (nil? @*win*)
+      true
+      (let [is-saved? (<! (ipc/call :get-is-saved {}))
             confirm (if is-saved? 0 (unsaved-changes-dialog @*win*))]
-        (if (= confirm 0) true false))))
+        (if (= confirm 0) true false)))))
 
 (defn load-file! [filepath]
   (ipc/cast :load-file {:file filepath
