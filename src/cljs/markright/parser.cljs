@@ -4,7 +4,7 @@
             [electron.ipc :as ipc]
             [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
 
-(defonce app-state (atom {:app/text "## Welcome to MarkRight\n\n![logo][1]\n\nThis is a minimalistic GFM markdown editor written in om.next.\n\nChanges to the document will be reflected in real time on the right ->\n\nPerfect for writing READMEs :)\n\n\n[1]: https://raw.githubusercontent.com/dvcrn/markright/master/resources/markright-banner.png"
+(defonce app-state (atom {:app/text ""
                           :app/force-overwrite false
                           :app/filepath ""
                           :app/saved-text ""}))
