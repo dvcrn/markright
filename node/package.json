@@ -1,7 +1,7 @@
 {
   "name": "markright",
   "productName": "MarkRight",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "electronVersion": "0.33.6",
   "description": "",
   "main":"app.js",
