@@ -1,58 +1,61 @@
 body {
-	font-family: 'Cousine', ;
-	padding: 0;
-	margin: 0;
-	height: 100%;
-	width: 100%;
-	
- background: rgba(255, 255, 255, .1);
+    font-family: 'Cousine', ;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, .1);
 }
 
 #app {
-	width: 100%;
-	height: 100%;
- display: flex;
- flex-direction: column;
- 
- justify-content: flex-start; /* align items in Main Axis */
- align-items: stretch; /* align items in Cross Axis */
- align-content: stretch; /* Extra space in Cross Axis */
-
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* align items in Main Axis */
+    align-items: stretch;
+    /* align items in Cross Axis */
+    align-content: stretch;
+    /* Extra space in Cross Axis */
 }
 
 #wrapper {
-	position: absolute;
-	display: flex;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
 }
 
-#parsed-markdown, #codemirror-target {
-	display: flex;
-	width: 50%;
- justify-content: flex-start; /* align items in Main Axis */
- align-items: stretch; /* align items in Cross Axis */
- align-content: stretch; /* Extra space in Cross Axis */
+#parsed-markdown,
+#codemirror-target {
+    display: flex;
+    width: 50%;
+    justify-content: flex-start;
+    /* align items in Main Axis */
+    align-items: stretch;
+    /* align items in Cross Axis */
+    align-content: stretch;
+    /* Extra space in Cross Axis */
 }
 
 #parsed-markdown {
-	min-width: 200px;
- max-width: 790px;
- margin: 0 auto;
+    min-width: 200px;
+    margin: 0 auto;
 }
 
 #codemirror-target {
-	background: #f9fafa;
+    background: #f9fafa;
 }
 
 .markdown-body {
-	padding: 30px;
-	overflow: auto;
+    padding: 30px;
+    overflow: auto;
 }
 
 .CodeMirror {
-	font-family: 'Cousine', !important;
- background: #f9fafa !important;
-	width: 100% !important;
-	cursor: text;
+    font-family: 'Cousine', !important;
+    background: #f9fafa !important;
+    width: 100% !important;
+    cursor: text;
 }
