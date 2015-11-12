@@ -17,8 +17,8 @@ Here are the current binaries:
 - [Mac][2]
 - [Windows 32bit][3]
 - [Windows 64bit][4]
-- [Linux ia32][5] _(untested)_
-- [Linux x64][6] _(untested)_
+- [Linux ia32][5]
+- [Linux x64][6]
 
 ### Command line
 
