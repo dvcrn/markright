@@ -36,7 +36,7 @@
                         :app/text text
                         :text-callback #(om/transact! this `[(app/text {:text ~%})])
                         :overwrite-callback #(om/transact! this `[(app/transact-overwrite)])})
-        (md/markdown {:app/html (js/marked text)})))))
+        (md/markdown {:app/html (js/marked text) :app/filepath filepath})))))
 
 (om/add-root! p/reconciler RootComponent (gdom/getElement "app"))
 
