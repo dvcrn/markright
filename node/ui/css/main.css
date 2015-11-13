@@ -41,6 +41,7 @@ body {
 
 #parsed-markdown {
     min-width: 200px;
+    width: 50%;
     margin: 0 auto;
 }
 
@@ -51,6 +52,7 @@ body {
 .markdown-body {
     padding: 30px;
     overflow: auto;
+    width: 100%;
 }
 
 .CodeMirror {
