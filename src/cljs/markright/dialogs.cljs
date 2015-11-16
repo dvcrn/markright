@@ -8,8 +8,18 @@
                    win
                    #js {:type "question"
                         :title "Unsaved changes"
-                        :message "There are unsaved changes. Are you sure you want to continue? Your changes will be lost."
+                        :message "Unsaved changes"
+                        :detail "There are unsaved changes. Are you sure you want to continue? Your changes will be lost."
                         :buttons #js ["Continue" "Cancel"]}))
+
+(defn error-dialog [win title text]
+  (.showMessageBox dialog
+                   win
+                   #js {:type "error"
+                        :title title
+                        :message title
+                        :detail text
+                        :buttons #js ["Ok"]}))
 
 (defn save-dialog [win]
   (.showSaveDialog dialog
@@ -32,5 +42,6 @@
                    win
                    #js {:type "info"
                         :title "Update Available"
-                        :message (str "Hi! MarkRight " latest-version " is available. You are currently running " current-version ".")
+                        :message "Update Available"
+                        :detail (str "Hi! MarkRight " latest-version " is available. You are currently running " current-version ".")
                         :buttons #js ["Ok" "Go to download"]}))

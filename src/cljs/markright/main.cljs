@@ -5,7 +5,7 @@
             [electron.ipc :as ipc]
             [cljs.core.async :as async]
             [clojure.string :refer [split]]
-            [markright.dialogs :refer [unsaved-changes-dialog save-dialog open-dialog update-dialog]])
+            [markright.dialogs :refer [unsaved-changes-dialog save-dialog open-dialog update-dialog error-dialog]])
   (:import [goog.net XhrIo]))
 
 (def *win* (atom nil))
@@ -35,7 +35,10 @@
   (.openExternal shell url))
 
 (defn write-file! [filepath content]
-  (.writeFileSync fs filepath content #js {:encoding "utf8"}))
+  (try
+    (.writeFileSync fs filepath content #js {:encoding "utf8"})
+    (catch js/Error e
+      (error-dialog @*win* "Error while saving document" (str e)))))
 
 (defn verify-unsaved-changes []
   (go
