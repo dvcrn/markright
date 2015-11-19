@@ -273,6 +273,7 @@
 
   (.on app "open-file" #(if %2
                           (do
+                            (open-window!)
                             (go (if (<! (verify-unsaved-changes)) (load-file! %2)))
                             (.preventDefault %1))))
   (.on app "activate" open-window!)
