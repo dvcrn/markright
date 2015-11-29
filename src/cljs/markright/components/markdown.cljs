@@ -30,9 +30,11 @@
     (doseq [tag (array-seq img-tags)]
       ;; To make sure we always use the real path for transforming
       ;; and not the already transformed one
-      (if (not (.getAttribute tag "data-src"))
-        (.setAttribute tag "data-src" (.getAttribute tag "src")))
-      (.setAttribute tag "src" (str "file://" current-path "/" (.getAttribute tag "data-src"))))))
+      (if (= (.indexOf (.getAttribute tag "src") "http") -1)
+        (do
+          (if (not (.getAttribute tag "data-src"))
+            (.setAttribute tag "data-src" (.getAttribute tag "src")))
+          (.setAttribute tag "src" (str "file://" current-path "/" (.getAttribute tag "data-src"))))))))
 
 (defn post-render! []
   (parse-urls!)
