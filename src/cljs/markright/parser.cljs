@@ -41,6 +41,13 @@
   [{:keys [state]} _ _]
   {:action #(swap! state assoc-in [:app/saved-text] (@state :app/text))})
 
+(defmethod mutate 'app/load-content
+  [{:keys [state]} _ {:keys [filepath content]}]
+  {:action #(swap! state assoc :app/filepath filepath
+                               :app/force-overwrite true
+                               :app/text content
+                               :app/saved-text content)})
+
 (def reconciler
   (om/reconciler
     {:state app-state

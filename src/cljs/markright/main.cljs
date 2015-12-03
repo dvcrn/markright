@@ -9,6 +9,7 @@
   (:import [goog.net XhrIo]))
 
 (def *win* (atom nil))
+(def backend-state (atom {:frontend-loaded false :content nil :filepath nil}))
 
 (def https (nodejs/require "https"))
 (def path (nodejs/require "path"))
@@ -23,6 +24,17 @@
 (def menu (nodejs/require "menu"))
 
 (def app-name "MarkRight")
+
+;; events from frontend
+(defmethod ipc/process-cast :init-frontend
+  [_]
+  (swap! backend-state assoc
+         :frontend-loaded true))
+
+(defmethod ipc/process-call :backend-state
+  [msg reply]
+  (let [state @backend-state]
+    (reply state)))
 
 ;; Functions
 (defn reload! []
@@ -42,15 +54,23 @@
 
 (defn verify-unsaved-changes []
   (go
-    (if (nil? @*win*)
+    ;; if we don't have a window or no frontend, there is no need to ask for changes
+    ;; even if we wanted to, this wouldn't work because the frontend can't tell us if there are changes
+    (if (or (nil? @*win*) (not (@backend-state :frontend-loaded)))
       true
       (let [is-saved? (<! (ipc/call :get-is-saved {}))
             confirm (if is-saved? 0 (unsaved-changes-dialog @*win*))]
         (if (= confirm 0) true false)))))
 
 (defn load-file! [filepath]
-  (ipc/cast :load-file {:file filepath
-                        :content (.readFileSync fs filepath #js {:encoding "utf8"})}))
+  (let [content (.readFileSync fs filepath #js {:encoding "utf8"})]
+    (swap! backend-state assoc
+           :content content
+           :filepath filepath)
+
+    (if (@backend-state :frontend-loaded)
+      (ipc/cast :load-file {:file filepath
+                            :content (.readFileSync fs filepath #js {:encoding "utf8"})}))))
 
 (defn open-file! []
   (go (if (<! (verify-unsaved-changes))
@@ -111,8 +131,8 @@
 
     {:label "Quit"
      :accelerator "CmdOrCtrl+Q"
-     :click quit-app!
-     }]})
+     :click quit-app!}]})
+
 
 (def file
   {:label "File"
@@ -127,8 +147,8 @@
 
     {:label "Save as..."
      :accelerator "CmdOrCtrl+Shift+S"
-     :click save-file-as!}
-    ]})
+     :click save-file-as!}]})
+
 
 (def edit
   {:label "Edit"
@@ -157,9 +177,9 @@
 
     {:label "Select All"
      :accelerator "CmdOrCtrl+A"
-     :role "selectall"}
+     :role "selectall"}]})
 
-    ]})
+
 
 (def window
   {:label "Window"
@@ -182,8 +202,8 @@
 
     {:label "Toggle DevTools"
      :accelerator "Alt+CmdOrCtrl+I"
-     :click toggle-devtools!}
-    ]})
+     :click toggle-devtools!}]})
+
 
 (def help
   {:label "Help"
@@ -192,8 +212,8 @@
    [{:label "MarkRight on Github"
      :click #(open-url! "https://github.com/dvcrn/markright")}
     {:label "@davicorn (Twitter)"
-     :click #(open-url! "https://twitter.com/davicorn")}
-    ]})
+     :click #(open-url! "https://twitter.com/davicorn")}]})
+
 
 (defn create-menu! []
   (.setApplicationMenu
@@ -218,7 +238,9 @@
       (.loadUrl win index)
       (ipc/set-target! win)
       ;; (.openDevTools win)
-      (.on win "closed" (fn [] (reset! *win* nil)))
+      (.on win "closed" (fn [] (do (reset! *win* nil) (swap! backend-state assoc :frontend-loaded false
+                                                                                 :content nil
+                                                                                 :filepath nil))))
       (.on win "close" (fn [e]
                          (.preventDefault e)
                          (go (if (<! (verify-unsaved-changes))
@@ -257,8 +279,8 @@
                                                         (if (= (update-dialog @*win* (.getVersion app) latest-version) 1)
                                                           (.openExternal shell "https://github.com/dvcrn/markright/releases/latest")))))))))]
     (.on request "error" #(.log js/console "Couldn't check for update."))
-    (.end request)
-    ))
+    (.end request)))
+
 
 (defn main []
   (.start crash-reporter)
@@ -271,14 +293,19 @@
     (fn [] (if (not= (.-platform nodejs/process) "darwin")
              (.quit app))))
 
+  ;; need to listen for open-file before the app is ready to not loose information
+  ;; though we can't create a new window here if the app is not ready yet,
+  ;; so we bind the open-file event twice.
   (.on app "open-file" #(if %2
                           (do
-                            (open-window!)
                             (go (if (<! (verify-unsaved-changes)) (load-file! %2)))
                             (.preventDefault %1))))
+
   (.on app "activate" open-window!)
   (.on app "ready"
     (fn []
+      (.on app "open-file" #(if %2 (open-window!)))
+
       (create-menu!)
       (open-window!)
       (check-update!))))
