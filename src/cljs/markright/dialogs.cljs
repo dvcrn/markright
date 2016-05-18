@@ -25,9 +25,7 @@
   (.showSaveDialog dialog
                    win
                    #js {:filters #js [#js {:name "Markdown"
-                                           :extensions #js ["md"]}
-                                          {:name "HTML"
-                                           :extensions #js ["html"]}]}))
+                                           :extensions #js ["md"]}]}))
 (defn open-dialog [win]
   (.showOpenDialog dialog
                    win
