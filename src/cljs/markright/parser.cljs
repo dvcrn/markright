@@ -4,6 +4,8 @@
             [electron.ipc :as ipc]
             [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
 
+(ipc/use-renderer!)
+
 (defonce app-state (atom {:app/text ""
                           :app/force-overwrite false
                           :app/filepath ""

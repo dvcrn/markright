@@ -1,7 +1,7 @@
 (ns markright.dialogs
   (:require [cljs.nodejs :as nodejs]))
 
-(def dialog (nodejs/require "dialog"))
+(def dialog (.-dialog (nodejs/require "electron")))
 
 (defn unsaved-changes-dialog [win]
   (.showMessageBox dialog

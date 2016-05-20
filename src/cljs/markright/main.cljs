@@ -13,17 +13,19 @@
 
 (def https (nodejs/require "https"))
 (def path (nodejs/require "path"))
-(def BrowserWindow (nodejs/require "browser-window"))
-(def crash-reporter (nodejs/require "crash-reporter"))
+(def BrowserWindow (.-BrowserWindow (nodejs/require "electron")))
+(def crash-reporter (.-crashReporter (nodejs/require "electron")))
 
-(def app (nodejs/require "app"))
-(def shell (nodejs/require "shell"))
+(def app (.-app (nodejs/require "electron")))
+(def shell (.-shell (nodejs/require "electron")))
 (def fs (nodejs/require "fs"))
 (def process (nodejs/require "process"))
 
-(def menu (nodejs/require "menu"))
+(def menu (.-Menu (nodejs/require "electron")))
 
 (def app-name "MarkRight")
+
+(ipc/use-main!)
 
 ;; events from frontend
 (defmethod ipc/process-cast :init-frontend
@@ -235,8 +237,7 @@
   (when (nil? @*win*)
     (let [win (BrowserWindow. (clj->js {:width 1200 :height 600}))]
       (reset! *win* win)
-      (.loadUrl win index)
-      (ipc/set-target! win)
+      (.loadURL win index)
       ;; (.openDevTools win)
       (.on win "closed" (fn [] (do (reset! *win* nil) (swap! backend-state assoc :frontend-loaded false
                                                                                  :content nil
@@ -283,7 +284,10 @@
 
 
 (defn main []
-  (.start crash-reporter)
+    (.start crash-reporter #js {:productName "MarkRight"
+                                :companyName "dvcrn"
+                                :submitURL "https://github.com/dvcrn/markright/issues"})
+
 
   ;; error listener
   (.on nodejs/process "error"

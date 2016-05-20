@@ -6,9 +6,15 @@
 
 ;; FIXME: this is so incomplete ...
 
-(def IPC (node/require "ipc"))
+;; (def IPC (.-ipcMain (node/require "electron")))
+(def IPC (atom nil))
 
+(def ipc-renderer (.-ipcRenderer (node/require "electron")))
+(def ipc-main (.-ipcMain (node/require "electron")))
 (def IPC-CHANNEL "electron.ipc")
+
+(.log js/console ipc-renderer)
+(.log js/console ipc-main)
 
 (defmulti process-call
   (fn [msg reply]
@@ -18,10 +24,6 @@
   ::action)
 
 (defonce *pending* (volatile! {}))
-(def *ipc-target* (volatile! IPC))
-
-(defn set-target! [target]
-  (vreset! *ipc-target* target))
 
 (defn process-msg [event arg]
   (let [msg (if (nil? arg) event arg)
@@ -43,7 +45,7 @@
                          :success true
                          :value value}
                     msg (pr-str res)]
-                (.send @*ipc-target* IPC-CHANNEL msg)))]
+                (.send @IPC IPC-CHANNEL msg)))]
         (process-call msg reply-fn))
       :reply
       (let [{:keys [ref value success]} msg
@@ -53,10 +55,9 @@
           (do (async/put! chan value)
               (async/close! chan))
           (do (async/close! chan)
-              (prn [:not-a-success msg])))
-        ))))
+              (prn [:not-a-success msg])))))))
 
-(.on IPC IPC-CHANNEL process-msg)
+
 
 (defn call
   [action args]
@@ -72,7 +73,7 @@
         chan (async/chan 1)]
     (vswap! *pending* assoc ref chan)
 
-    (.send @*ipc-target* IPC-CHANNEL text)
+    (.send @IPC IPC-CHANNEL text)
     chan))
 
 (defn cast
@@ -81,5 +82,18 @@
               ::op :cast
               ::action action)
         text (pr-str msg)]
-    (.send @*ipc-target* IPC-CHANNEL text)
-    ))
+    (.send @IPC IPC-CHANNEL text)))
+
+
+(defn use-main! []
+    (.log js/console "Using main IPC")
+    (reset! IPC ipc-main)
+    (.log js/console @IPC)
+    (.on @IPC IPC-CHANNEL process-msg))
+
+(defn use-renderer! []
+    (.log js/console "Using renderer IPC")
+    (reset! IPC ipc-renderer)
+    (.log js/console @IPC)
+    (.on @IPC IPC-CHANNEL process-msg))
+

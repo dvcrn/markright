@@ -9,6 +9,11 @@
             [markright.components.markdown :as md]
             [cljs.core.async :as async :refer [chan put! pub sub unsub <!]]))
 
+(.log js/console "Hello")
+
+(ipc/use-renderer!)
+
+
 (.initHighlightingOnLoad js/hljs)
 
 (defui RootComponent
