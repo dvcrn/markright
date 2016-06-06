@@ -15,6 +15,6 @@
   "dependencies": {
     "codemirror": "~5.7.0",
     "highlightjs": "~8.9.1",
-    "marked": "git@github.com:dvcrn/marked.git#checkbox-support"
+    "marked": "https://github.com/dvcrn/marked.git#checkbox-support"
   }
 }
