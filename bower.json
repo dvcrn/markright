@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "codemirror": "~5.7.0",
+    "codemirror-spell-checker": "^1.1.1",
     "highlightjs": "~8.9.1",
     "marked": "https://github.com/dvcrn/marked.git#checkbox-support"
   }
