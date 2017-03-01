@@ -1,3 +1,5 @@
+_This project is currently frozen. If you want to help developing it, please feel free to [ping me](https://github.com/dvcrn)_
+
 ![banner](resources/markright-banner.png)
 
 a minimalistic github flavored markdown editor
