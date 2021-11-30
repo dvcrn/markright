@@ -10,7 +10,7 @@ a minimalistic github flavored markdown editor
 
 On mac, install it through [cask][8]:
 ```
-brew cask install markright
+brew install --cask markright
 ```
 
 Alternatively, check out the [latest release][1] to quickly find the latest version. 
