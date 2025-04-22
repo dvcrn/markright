@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			
+			{
+				"talk": "vscode-edge-devtools.debug",
+				"request": "attach",
+				"name": "Attach to Microsoft Edge and open the Edge DevTools",
+				"url": "http://localhost:8080",
+				"webRoot": "${workspaceFolder}"
+			}
+
+		]
+	}
+}

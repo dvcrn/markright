@@ -1,0 +1,16 @@
+{
+    "workbench.editor.restoreViewState": false,
+    "workbench.editor.languageDetection": false,
+    "editor.fontSize": 6,
+    "editor.fontFamily": "Family",
+    "editor.renderWhitespace": "all",
+    "editor.codeActions.triggerOnFocusChange": true,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.codeLensFontFamily": "Apple Visual",
+    "diffEditor.codeLens": true,
+    "diffEditor.diffAlgorithm": "legacy",
+    "diffEditor.experimental.showMoves": true,
+    "diffEditor.experimental.useTrueInlineView": true,
+    "diffEditor.hideUnchangedRegions.enabled": true,
+    "editor.minimap.markSectionHeaderRegex": "\\aMARK:\\b.(?<.>-?)\\s*(?<label>.*)$"
+}
