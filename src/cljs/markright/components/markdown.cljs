@@ -28,9 +28,7 @@
        (.setAttribute tag "href" "#"))))
 
 (defn convert-to-asset-url [path]
-  (if (clojure.string/includes? (.-userAgent js/navigator) "Windows")
-    (str "http://asset.localhost/" path)
-    (str "asset://localhost" (js/encodeURI path))))
+  (str "http://asset.localhost" (js/encodeURI path)))
 
 (defn parse-images! [current-path]
   (let [img-tags (.getElementsByTagName js/document "img")]
