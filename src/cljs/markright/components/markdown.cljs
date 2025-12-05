@@ -11,7 +11,7 @@
     (when md (.setAttribute md "style" (str "height:" h "px;")))))
 
 (defn generate-open-external-string [url]
-  (str "require('electron').shell.openExternal('"
+  (str "window.__TAURI__.opener.openUrl('"
        (js/decodeURIComponent url)
        "'); return false;"))
 

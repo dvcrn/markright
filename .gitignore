@@ -11,6 +11,7 @@ pom.xml
 node_modules
 bower_components
 node/ui/js
+node/ui/vendor
 node/src
 node/app.js
 .DS_Store

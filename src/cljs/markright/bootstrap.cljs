@@ -21,8 +21,8 @@
 
 (set! js/hljs hljs)
 
-(def marked (js/require "marked"))
-(set! js/marked (.-parse marked))
+(def marked (if (exists? js/marked) js/marked (js/require "marked")))
+;; (set! js/marked (.-parse marked))
 
 (when (exists? js/hljs)
   (.initHighlightingOnLoad js/hljs))

@@ -10,6 +10,8 @@
     "watch": "shadow-cljs watch main front",
     "release": "shadow-cljs release main front",
     "clean": "rm -rf ./dist ./node/ui/js/ ./.shadow-cljs ./target",
+    "tauri:prepare": "bash scripts/tauri-prepare.sh",
+    "tauri": "tauri",
     "build:osx": "electron-packager node/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion --app-version=$npm_package_version && node scripts/post-build-mac.js",
     "build:win": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion --app-version=$npm_package_version",
     "build:linux": "electron-packager node/ $npm_package_productName --out=dist --arch=x64 --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion --app-version=$npm_package_version",
@@ -20,6 +22,8 @@
     "package:linux": "cd dist/ && zip -r MarkRight_Linux_x64.zip MarkRight-linux-x64 && cd ../"
   },
   "devDependencies": {
+    "@tauri-apps/api": "^2.9.1",
+    "@tauri-apps/cli": "^2.9.5",
     "electron": "^30.0.0",
     "electron-builder": "^26.0.12",
     "electron-packager": "^17.1.2",
