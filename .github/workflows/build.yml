@@ -34,9 +34,7 @@ jobs:
             package_script: bun run package:linux
             artifact_name: MarkRight-linux
             artifact_path: |
-              dist/MarkRight-linux-ia32
               dist/MarkRight-linux-x64
-              dist/MarkRight_Linux_ia32.zip
               dist/MarkRight_Linux_x64.zip
     runs-on: ${{ matrix.os }}
 
