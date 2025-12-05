@@ -14,8 +14,8 @@
     "build:win": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion --app-version=$npm_package_version",
     "build:linux": "electron-packager node/ $npm_package_productName --out=dist --arch=x64 --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion --app-version=$npm_package_version",
     "package": "npm run package:win32 && npm run package:win64 && npm run package:osx && npm run package:linux",
-    "package:win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
-    "package:win32": "electron-builder dist/markright-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows32.exe",
+    "package:win64": "cd dist && powershell.exe -NoProfile -Command \"Compress-Archive -Path 'MarkRight-win32-x64' -DestinationPath 'MarkRight_Windows64.zip' -Force\" && cd ..",
+    "package:win32": "cd dist && powershell.exe -NoProfile -Command \"Compress-Archive -Path 'MarkRight-win32-ia32' -DestinationPath 'MarkRight_Windows32.zip' -Force\" && cd ..",
     "package:osx": "hdiutil create -format UDZO -srcfolder dist/MarkRight-darwin-x64/MarkRight.app dist/MarkRight_Mac.dmg",
     "package:linux": "cd dist/ && zip -r MarkRight_Linux_x64.zip MarkRight-linux-x64 && cd ../"
   },

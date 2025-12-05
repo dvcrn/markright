@@ -27,8 +27,8 @@ jobs:
             artifact_path: |
               dist/MarkRight-win32-ia32
               dist/MarkRight-win32-x64
-              dist/MarkRight_Windows32.exe
-              dist/MarkRight_Windows64.exe
+              dist/MarkRight_Windows32.zip
+              dist/MarkRight_Windows64.zip
           - os: ubuntu-latest
             build_script: bun run build:linux
             package_script: bun run package:linux
