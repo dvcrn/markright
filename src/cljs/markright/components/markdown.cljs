@@ -1,7 +1,8 @@
 (ns markright.components.markdown
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
-            [markright.bootstrap]))
+            [markright.bootstrap]
+            ["@tauri-apps/api/core" :refer [convertFileSrc]]))
 
 (def current-path (atom ""))
 
@@ -36,7 +37,7 @@
         (do
           (if (not (.getAttribute tag "data-src"))
             (.setAttribute tag "data-src" (.getAttribute tag "src")))
-          (.setAttribute tag "src" (str "file://" current-path "/" (.getAttribute tag "data-src"))))))))
+          (.setAttribute tag "src" (convertFileSrc (str current-path "/" (.getAttribute tag "data-src")))))))))
 
 (defn post-render! []
   (parse-urls!)
