@@ -2,39 +2,23 @@ name: Build and Package
 
 on:
   push:
-    branches: [ master, main, develop ]
+    branches: [ master, main, develop, tauri ]
   pull_request:
-    branches: [ master, main, develop ]
+    branches: [ master, main, develop, tauri ]
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: macos-latest
-            build_script: bun run build:osx
-            package_script: bun run package:osx
-            artifact_name: MarkRight-mac
-            artifact_path: |
-              dist/MarkRight_Mac.dmg
+            platform: macos
           - os: windows-latest
-            build_script: bun run build:win
-            package_script: |
-              bun run package:win32
-              bun run package:win64
-            artifact_name: MarkRight-windows
-            artifact_path: |
-              dist/MarkRight-win32-ia32
-              dist/MarkRight-win32-x64
-              dist/MarkRight_Windows32.zip
-              dist/MarkRight_Windows64.zip
-          - os: ubuntu-latest
-            build_script: bun run build:linux
-            package_script: bun run package:linux
-            artifact_name: MarkRight-linux
-            artifact_path: |
-              dist/MarkRight-linux-x64
-              dist/MarkRight_Linux_x64.zip
+            platform: windows
+          - os: ubuntu-22.04
+            platform: linux
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -51,28 +35,31 @@ jobs:
       with:
         bun-version: latest
 
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install Linux dependencies
+      if: matrix.platform == 'linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
     - name: Install dependencies
       run: bun install
-      shell: bash
 
-    - name: Build CLJS
-      run: bun run release
-      shell: bash
+    - name: Build Tauri App
+      run: bun tauri build
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Clean dist
-      run: rm -rf dist
-      shell: bash
-
-    - name: Build Electron App
-      run: ${{ matrix.build_script }}
-      shell: bash
-
-    - name: Package App
-      run: ${{ matrix.package_script }}
-      shell: bash
-
-    - name: Upload Artifact
+    - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ matrix.artifact_name }}
-        path: ${{ matrix.artifact_path }}
+        name: MarkRight-${{ matrix.platform }}
+        path: |
+          src-tauri/target/release/bundle/dmg/*.dmg
+          src-tauri/target/release/bundle/macos/*.app
+          src-tauri/target/release/bundle/nsis/*.exe
+          src-tauri/target/release/bundle/msi/*.msi
+          src-tauri/target/release/bundle/deb/*.deb
+          src-tauri/target/release/bundle/appimage/*.AppImage
