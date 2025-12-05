@@ -25,4 +25,4 @@
 ;; (set! js/marked (.-parse marked))
 
 (when (exists? js/hljs)
-  (.initHighlightingOnLoad js/hljs))
+  (.highlightAll js/hljs))
