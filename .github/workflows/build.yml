@@ -1,0 +1,46 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Set up Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Build CLJS
+      run: bun run release
+
+    - name: Build Electron Apps
+      run: |
+        bun run build:osx
+        bun run build:win
+        bun run build:linux
+
+    - name: Package Apps
+      run: bun run package
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: MarkRight-Builds
+        path: dist/
