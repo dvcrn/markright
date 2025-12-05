@@ -1,5 +1,3 @@
-_This project is currently frozen. If you want to help developing it, please feel free to [ping me](https://github.com/dvcrn)_
-
 <p align="center">
   <img src="logo_new.png" width="128" alt="logo" />
 </p>

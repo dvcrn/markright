@@ -22,7 +22,6 @@
     "package:linux": "cd dist/ && zip -r MarkRight_Linux_x64.zip MarkRight-linux-x64 && cd ../"
   },
   "devDependencies": {
-    "@tauri-apps/api": "^2.9.1",
     "@tauri-apps/cli": "^2.9.5",
     "electron": "^30.0.0",
     "electron-builder": "^26.0.12",
@@ -30,6 +29,7 @@
     "shadow-cljs": "^2.28.12"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.9.1",
     "@tauri-apps/plugin-dialog": "^2.4.2",
     "@tauri-apps/plugin-fs": "^2.4.4",
     "@tauri-apps/plugin-opener": "^2.5.2",

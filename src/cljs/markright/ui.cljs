@@ -16,6 +16,7 @@
 
 (defn root-component []
   (let [{:keys [app/text app/html app/force-overwrite app/filepath app/saved-text]} @app-state]
+    (js/console.log "Root render. Filepath:" filepath)
     (if (not (= 0 (.-length filepath)))
       (if (= text saved-text)
         (tauri/set-title filepath)

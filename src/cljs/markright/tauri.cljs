@@ -7,6 +7,7 @@
             ["@tauri-apps/api/window" :as window]))
 
 (defn set-title [title]
+  (js/console.log "Setting title to:" title)
   (-> (window/getCurrentWindow)
       (.setTitle title)))
 
