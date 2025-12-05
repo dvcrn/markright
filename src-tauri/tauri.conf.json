@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "markright",
+  "productName": "MarkRight",
   "version": "0.1.0",
   "identifier": "com.markright.app",
   "build": {

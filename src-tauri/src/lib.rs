@@ -14,8 +14,25 @@ pub fn run() {
         )?;
       }
       
-      use tauri::menu::{Menu, MenuItem, Submenu, PredefinedMenuItem};
+      use tauri::menu::{Menu, MenuItem, Submenu, PredefinedMenuItem, AboutMetadata};
       let handle = app.handle();
+
+      let app_menu = Submenu::with_items(
+          handle,
+          "MarkRight",
+          true,
+          &[
+              &PredefinedMenuItem::about(handle, Some("About MarkRight"), Some(AboutMetadata::default()))?,
+              &PredefinedMenuItem::separator(handle)?,
+              &PredefinedMenuItem::services(handle, Some("Services"))?,
+              &PredefinedMenuItem::separator(handle)?,
+              &PredefinedMenuItem::hide(handle, Some("Hide MarkRight"))?,
+              &PredefinedMenuItem::hide_others(handle, Some("Hide Others"))?,
+              &PredefinedMenuItem::show_all(handle, Some("Show All"))?,
+              &PredefinedMenuItem::separator(handle)?,
+              &PredefinedMenuItem::quit(handle, Some("Quit MarkRight"))?,
+          ],
+      )?;
       
       let file_menu = Submenu::with_items(
           handle,
@@ -25,7 +42,6 @@ pub fn run() {
               &MenuItem::with_id(handle, "open", "Open...", true, Some("CmdOrCtrl+O"))?,
               &MenuItem::with_id(handle, "save", "Save", true, Some("CmdOrCtrl+S"))?,
               &MenuItem::with_id(handle, "save_as", "Save As...", true, Some("CmdOrCtrl+Shift+S"))?,
-              &MenuItem::with_id(handle, "quit", "Quit", true, Some("CmdOrCtrl+Q"))?,
           ],
       )?;
 
@@ -36,6 +52,7 @@ pub fn run() {
           &[
               &PredefinedMenuItem::undo(handle, Some("Undo"))?,
               &PredefinedMenuItem::redo(handle, Some("Redo"))?,
+              &PredefinedMenuItem::separator(handle)?,
               &PredefinedMenuItem::cut(handle, Some("Cut"))?,
               &PredefinedMenuItem::copy(handle, Some("Copy"))?,
               &PredefinedMenuItem::paste(handle, Some("Paste"))?,
@@ -43,7 +60,16 @@ pub fn run() {
           ],
       )?;
 
-      let menu = Menu::with_items(handle, &[&file_menu, &edit_menu])?;
+      let help_menu = Submenu::with_items(
+          handle,
+          "Help",
+          true,
+          &[
+              &MenuItem::with_id(handle, "github", "MarkRight on GitHub", true, None::<&str>)?,
+          ],
+      )?;
+
+      let menu = Menu::with_items(handle, &[&app_menu, &file_menu, &edit_menu, &help_menu])?;
       app.set_menu(menu)?;
 
       Ok(())
@@ -51,16 +77,13 @@ pub fn run() {
     .on_menu_event(|app, event| {
         let id = event.id().as_ref();
         match id {
-            "quit" => {
-                app.exit(0);
-            }
             "open" | "save" | "save_as" => {
                 // Emit event to frontend
                 let _ = app.emit(format!("menu-{}", id).as_str(), ());
             }
-            // Edit commands are usually handled natively by the OS/Webview if roles are set,
-            // but since we used custom items, we might need to handle them or use PredefinedMenuItems.
-            // For now, let's see if we can use PredefinedMenuItems for Edit.
+            "github" => {
+                let _ = app.emit("menu-github", ());
+            }
             _ => {}
         }
     })

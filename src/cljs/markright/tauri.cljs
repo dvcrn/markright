@@ -54,7 +54,11 @@
                      (swap! app-state assoc :app/saved-text content)))
             (.catch (fn [err] (js/console.error "Error writing file:" err))))))))
 
+(defn open-github []
+  (open-url "https://github.com/dvcrn/markright"))
+
 (defn init-listeners []
   (event/listen "menu-open" open-file)
   (event/listen "menu-save" save-file)
-  (event/listen "menu-save_as" save-file-as))
+  (event/listen "menu-save_as" save-file-as)
+  (event/listen "menu-github" open-github))
