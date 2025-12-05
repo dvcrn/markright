@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "MarkRight",
-  "version": "0.1.0",
-  "identifier": "com.markright.app",
+  "version": "1.0.0",
+  "identifier": "sh.d.markright",
   "build": {
     "frontendDist": "../node/ui",
     "beforeBuildCommand": "bun run tauri:prepare && bun run shadow-cljs release front"
