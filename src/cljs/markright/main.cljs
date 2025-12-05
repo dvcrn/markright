@@ -34,13 +34,6 @@
     (reply state)))
 
 ;; Functions
-(defn reload! []
-  (.reload @*win*))
-
-(defn toggle-devtools! []
-  (when-let [win @*win*]
-    (.toggleDevTools (.-webContents win))))
-
 (defn open-url! [url]
   (.openExternal shell url))
 
@@ -75,10 +68,6 @@
         (let [file (first (open-dialog @*win*))]
           (if (not (nil? file))
             (load-file! file))))))
-
-(defn quit-app! []
-  (go (if (<! (verify-unsaved-changes))
-        (.exit app))))
 
 (defn save-file-as! []
   (go (let [file-path (save-dialog @*win*)
@@ -129,7 +118,7 @@
 
     {:label "Quit"
      :accelerator "CmdOrCtrl+Q"
-     :click quit-app!}]})
+     :role "quit"}]})
 
 
 (def file
@@ -196,11 +185,11 @@
    :submenu
    [{:label "Reload"
      :accelerator "CmdOrCtrl+R"
-     :click reload!}
+     :role "reload"}
 
     {:label "Toggle DevTools"
      :accelerator "Alt+CmdOrCtrl+I"
-     :click toggle-devtools!}]})
+     :role "toggleDevTools"}]})
 
 
 (def help
@@ -284,6 +273,8 @@
     (.end request)))
 
 
+(def is-quitting (atom false))
+
 (defn main []
   (when crash-reporter
     (.start crash-reporter (clj->js {:uploadToServer false})))
@@ -292,8 +283,10 @@
   (.on process "uncaughtException"
        (fn [err] (.log js/console err)))
 
+  (.on app "before-quit" #(reset! is-quitting true))
+
   (.on app "window-all-closed"
-    (fn [] (if (not= (.-platform process) "darwin")
+    (fn [] (if (or @is-quitting (not= (.-platform process) "darwin"))
              (.quit app))))
 
   ;; need to listen for open-file before the app is ready to not loose information

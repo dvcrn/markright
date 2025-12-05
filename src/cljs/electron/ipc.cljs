@@ -72,10 +72,15 @@
               ::ref ref)
         text (pr-str msg)
 
-        chan (async/chan 1)]
+        chan (async/chan 1)
+        target @*ipc-target*]
     (vswap! *pending* assoc ref chan)
 
-    (.send @*ipc-target* IPC-CHANNEL text)
+    (if target
+      (.send target IPC-CHANNEL text)
+      (do
+        (println "IPC ERROR: target is nil/undefined in call for action" action)
+        (async/close! chan)))
     chan))
 
 (defn cast
@@ -83,6 +88,9 @@
   (let [msg (assoc args
               ::op :cast
               ::action action)
-        text (pr-str msg)]
-    (.send @*ipc-target* IPC-CHANNEL text)
+        text (pr-str msg)
+        target @*ipc-target*]
+    (if target
+      (.send target IPC-CHANNEL text)
+      (println "IPC ERROR: target is nil/undefined in cast for action" action))
     ))

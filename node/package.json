@@ -1,7 +1,7 @@
 {
   "name": "markright",
   "productName": "MarkRight",
-  "version": "0.1.11",
+  "version": "1.0.0",
   "electronVersion": "30.5.1",
   "description": "A minimalistic GitHub flavored markdown editor",
   "main": "app.js",

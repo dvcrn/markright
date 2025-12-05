@@ -4,6 +4,7 @@
             [reagent.dom :as rdom]
             [goog.dom :as gdom]
             [markright.bootstrap]
+            [markright.parser :as parser]
             [markright.state :refer [app-state]]
             [electron.ipc :as ipc]
             [markright.components.codemirror :as cm]
@@ -28,16 +29,18 @@
      [md/markdown {:html (js/marked text) :filepath filepath}]]))
 
 (defn init []
-  (rdom/render [root-component] (gdom/getElement "app"))
-  (.setOptions js/marked #js {:gfm true})
-  (ipc/cast :init-frontend {})
-  (go
-    (let [backend-state (<! (ipc/call :backend-state {}))]
-      (when (not (nil? (backend-state :content)))
-        (swap! app-state assoc
-               :app/text (backend-state :content)
-               :app/saved-text (backend-state :content)
-               :app/filepath (backend-state :filepath)
-               :app/force-overwrite true)))))
+  ;; Force loading of parser namespace
+  (when parser/loaded
+    (rdom/render [root-component] (gdom/getElement "app"))
+    (.setOptions js/marked #js {:gfm true})
+    (ipc/cast :init-frontend {})
+    (go
+      (let [backend-state (<! (ipc/call :backend-state {}))]
+        (when (not (nil? (backend-state :content)))
+          (swap! app-state assoc
+                 :app/text (backend-state :content)
+                 :app/saved-text (backend-state :content)
+                 :app/filepath (backend-state :filepath)
+                 :app/force-overwrite true))))))
 
 (init)

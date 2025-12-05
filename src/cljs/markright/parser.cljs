@@ -1,33 +1,37 @@
 (ns markright.parser
-  (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [markright.state :refer [app-state]]
-            [electron.ipc :as ipc]
-            [cljs.core.async :as async :refer [chan put! pub sub unsub <! >!]]))
+            [electron.ipc :as ipc]))
 
-;; This namespace is kept for IPC handling compatibility
-;; but logic is moved to direct state manipulation
+(def loaded true)
 
-(defonce root-channel (chan))
+(defmethod ipc/process-cast :load-file
+  [data]
+  (swap! app-state assoc
+         :app/text (data :content)
+         :app/saved-text (data :content)
+         :app/filepath (data :file)
+         :app/force-overwrite true))
 
-(ipc/on :open-file
-        (fn [data]
-          (swap! app-state assoc
-                 :app/text (data :content)
-                 :app/saved-text (data :content)
-                 :app/filepath (data :filepath)
-                 :app/force-overwrite true)))
+(defmethod ipc/process-cast :set-current-file
+  [data]
+  (swap! app-state assoc
+         :app/filepath (data :file)
+         :app/saved-text (data :content)))
 
-(ipc/on :save-file
-        (fn [data]
-          (let [state @app-state]
-            (ipc/cast :save-file {:content (state :app/text)
-                                  :filepath (state :app/filepath)}))))
+(defmethod ipc/process-cast :set-saved-content
+  [data]
+  (swap! app-state assoc
+         :app/saved-text (data :content)))
 
-(ipc/on :save-file-success
-        (fn [data]
-          (swap! app-state assoc :app/saved-text (@app-state :app/text))))
+(defmethod ipc/process-call :get-is-saved
+  [msg reply]
+  (let [{:keys [app/text app/saved-text]} @app-state]
+    (reply (= text saved-text))))
 
-(ipc/on :save-as-file
-        (fn [data]
-          (let [state @app-state]
-            (ipc/cast :save-as-file {:content (state :app/text)}))))
+(defmethod ipc/process-call :get-current-content
+  [msg reply]
+  (reply (@app-state :app/text)))
+
+(defmethod ipc/process-call :get-current-file
+  [msg reply]
+  (reply (@app-state :app/filepath)))
