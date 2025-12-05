@@ -10,7 +10,7 @@
     "watch": "shadow-cljs watch main front",
     "release": "shadow-cljs release main front",
     "clean": "rm -rf ./dist ./node/ui/js/ ./.shadow-cljs ./target",
-    "build:osx": "electron-packager node/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion --app-version=$npm_package_version && node scripts/post-build-mac.js",
+    "build:osx": "electron-packager node/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=x64 --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion --app-version=$npm_package_version && node scripts/post-build-mac.js",
     "build:win": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion --app-version=$npm_package_version",
     "build:linux": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion --app-version=$npm_package_version",
     "package": "npm run package:win32 && npm run package:win64 && npm run package:osx && npm run package:linux",
