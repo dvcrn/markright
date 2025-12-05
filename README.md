@@ -1,8 +1,4 @@
-<p align="center">
-  <img src="logo_new.png" width="128" alt="logo" />
-</p>
-
-a minimalistic github flavored markdown editor
+MarkRight - a minimalistic github flavored markdown editor
 
 ![screenshot](resources/screenshot.png)
 
@@ -16,11 +12,11 @@ brew install --cask markright
 Alternatively, check out the [latest release][1] to quickly find the latest version. 
 Here are the current binaries: 
 
-- [Mac][2]
-- [Windows 32bit][3]
-- [Windows 64bit][4]
-- [Linux ia32][5]
-- [Linux x64][6]
+- [Mac (DMG)][2]
+- [Windows (Installer)][3]
+- [Windows (MSI)][4]
+- [Linux (Deb)][5]
+- [Linux (AppImage)][6]
 
 ### Command line
 
@@ -53,10 +49,10 @@ MarkRight is written in ClojureScript and Rust (Tauri).
 Licensed under [GPLv3][7]
 
 [1]: https://github.com/dvcrn/markright/releases/latest/
-[2]: https://github.com/dvcrn/markright/releases/download/0.1.11/MarkRight_Mac.dmg
-[3]: https://github.com/dvcrn/markright/releases/download/0.1.11/MarkRight_Windows32.exe
-[4]: https://github.com/dvcrn/markright/releases/download/0.1.11/MarkRight_Windows64.exe
-[5]: https://github.com/dvcrn/markright/releases/download/0.1.11/MarkRight_Linux_ia32.zip
-[6]: https://github.com/dvcrn/markright/releases/download/0.1.11/MarkRight_Linux_x64.zip
+[2]: https://github.com/dvcrn/markright/releases/download/1.0.0/MarkRight_1.0.0.dmg
+[3]: https://github.com/dvcrn/markright/releases/download/1.0.0/MarkRight_1.0.0_x64-setup.exe
+[4]: https://github.com/dvcrn/markright/releases/download/1.0.0/MarkRight_1.0.0_x64_en-US.msi
+[5]: https://github.com/dvcrn/markright/releases/download/1.0.0/MarkRight_1.0.0_amd64.deb
+[6]: https://github.com/dvcrn/markright/releases/download/1.0.0/MarkRight_1.0.0_amd64.AppImage
 [7]: http://www.gnu.org/licenses/gpl-3.0.txt
 [8]: http://caskroom.io/
