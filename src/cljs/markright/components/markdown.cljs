@@ -1,7 +1,8 @@
 (ns markright.components.markdown
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
-            [markright.bootstrap]))
+            [markright.bootstrap]
+            ["@tauri-apps/api/core" :refer [convertFileSrc]]))
 
 (def current-path (atom ""))
 
@@ -27,9 +28,6 @@
        (.setAttribute tag "onclick" (generate-open-external-string (.-href tag)))
        (.setAttribute tag "href" "#"))))
 
-(defn convert-to-asset-url [path]
-  (str "http://asset.localhost" (js/encodeURI path)))
-
 (defn parse-images! [current-path]
   (let [img-tags (.getElementsByTagName js/document "img")]
     (doseq [tag (array-seq img-tags)]
@@ -39,7 +37,7 @@
         (do
           (if (not (.getAttribute tag "data-src"))
             (.setAttribute tag "data-src" (.getAttribute tag "src")))
-          (.setAttribute tag "src" (convert-to-asset-url (str current-path "/" (.getAttribute tag "data-src")))))))))
+          (.setAttribute tag "src" (convertFileSrc (str current-path "/" (.getAttribute tag "data-src")))))))))
 
 (defn post-render! []
   (parse-urls!)
