@@ -11,6 +11,7 @@
     "fs:allow-home-read-recursive",
     "fs:allow-home-write-recursive",
     "dialog:default",
-    "opener:default"
+    "opener:default",
+    "core:window:allow-set-title"
   ]
 }
