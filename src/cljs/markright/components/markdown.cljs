@@ -30,7 +30,7 @@
 (defn convert-to-asset-url [path]
   (let [encoded-path (js/encodeURI path)]
     (js/console.log "Converting path:" path "to asset url")
-    (str "asset://localhost" encoded-path)))
+    (str "file://" encoded-path)))
 
 (defn parse-images! [current-path]
   (let [img-tags (.getElementsByTagName js/document "img")]
