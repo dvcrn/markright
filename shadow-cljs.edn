@@ -8,10 +8,7 @@
   [reagent "1.2.0"]]
 
  :builds
- {:main {:target :node-script
-         :output-to "node/app.js"
-         :main markright.main/main}
-  :front {:target :browser
+ {:front {:target :browser
           :output-dir "node/ui/js"
           :asset-path "js"
           :modules {:front {:entries [markright.ui]}}}}
