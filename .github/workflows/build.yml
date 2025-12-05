@@ -8,7 +8,39 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            build_script: bun run build:osx
+            package_script: bun run package:osx
+            artifact_name: MarkRight-mac
+            artifact_path: |
+              dist/MarkRight-darwin-x64
+              dist/MarkRight-darwin-arm64
+              dist/MarkRight-darwin-universal
+              dist/MarkRight_Mac.dmg
+          - os: windows-latest
+            build_script: bun run build:win
+            package_script: |
+              bun run package:win32
+              bun run package:win64
+            artifact_name: MarkRight-windows
+            artifact_path: |
+              dist/MarkRight-win32-ia32
+              dist/MarkRight-win32-x64
+              dist/MarkRight_Windows32.exe
+              dist/MarkRight_Windows64.exe
+          - os: ubuntu-latest
+            build_script: bun run build:linux
+            package_script: bun run package:linux
+            artifact_name: MarkRight-linux
+            artifact_path: |
+              dist/MarkRight-linux-ia32
+              dist/MarkRight-linux-x64
+              dist/MarkRight_Linux_ia32.zip
+              dist/MarkRight_Linux_x64.zip
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v4
@@ -26,21 +58,22 @@ jobs:
 
     - name: Install dependencies
       run: bun install
+      shell: bash
 
     - name: Build CLJS
       run: bun run release
+      shell: bash
 
-    - name: Build Electron Apps
-      run: |
-        bun run build:osx
-        bun run build:win
-        bun run build:linux
+    - name: Build Electron App
+      run: ${{ matrix.build_script }}
+      shell: bash
 
-    - name: Package Apps
-      run: bun run package
+    - name: Package App
+      run: ${{ matrix.package_script }}
+      shell: bash
 
-    - name: Upload Artifacts
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MarkRight-Builds
-        path: dist/
+        name: ${{ matrix.artifact_name }}
+        path: ${{ matrix.artifact_path }}
