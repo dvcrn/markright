@@ -17,6 +17,8 @@ jobs:
             artifact_name: MarkRight-mac
             artifact_path: |
               dist/MarkRight-darwin-x64
+              dist/MarkRight-darwin-arm64
+              dist/MarkRight-darwin-universal
               dist/MarkRight_Mac.dmg
           - os: windows-latest
             build_script: bun run build:win
