@@ -1,6 +1,6 @@
 _This project is currently frozen. If you want to help developing it, please feel free to [ping me](https://github.com/dvcrn)_
 
-![banner](resources/markright-banner.png)
+![logo](logo_new_fill.png)
 
 a minimalistic github flavored markdown editor
 
@@ -32,21 +32,21 @@ markright README.md
 
 ## Building
 
-MarkRight is written in clojurescript and now builds with `shadow-cljs`.
+MarkRight is written in ClojureScript and Rust (Tauri).
 
 ### Requirements
 
 - `bun`
+- `rust` (cargo)
 - `bun install`
 
 ### Compiling
-- `bun run release` compiles both the electron main process and renderer via `shadow-cljs` (output goes into `node/app.js` and `node/ui/js/`).
-- `bun start` launches electron using the compiled output (run `bun run release` at least once before starting).
+- `bun tauri build` compiles the frontend via `shadow-cljs` and the backend via `cargo`, producing a native binary.
 
 ### Development
 
-- `bun run watch` runs `shadow-cljs watch main front` for live recompilation (keep it running).
-- In another terminal, run `bun start` to launch electron against the watched build.
+- `bun run watch` runs `shadow-cljs watch main front` for live recompilation of the frontend.
+- In another terminal, run `bun tauri dev` to launch the application.
 
 ## License
 
