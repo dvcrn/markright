@@ -64,6 +64,10 @@ jobs:
       run: bun run release
       shell: bash
 
+    - name: Clean dist
+      run: rm -rf dist
+      shell: bash
+
     - name: Build Electron App
       run: ${{ matrix.build_script }}
       shell: bash
