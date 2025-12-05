@@ -3,7 +3,12 @@
             ["@tauri-apps/api/event" :as event]
             ["@tauri-apps/plugin-dialog" :as dialog]
             ["@tauri-apps/plugin-fs" :as fs]
-            ["@tauri-apps/plugin-opener" :as opener]))
+            ["@tauri-apps/plugin-opener" :as opener]
+            ["@tauri-apps/api/window" :as window]))
+
+(defn set-title [title]
+  (-> (window/getCurrentWindow)
+      (.setTitle title)))
 
 (defn open-url [url]
   (opener/open url))

@@ -18,8 +18,8 @@
   (let [{:keys [app/text app/html app/force-overwrite app/filepath app/saved-text]} @app-state]
     (if (not (= 0 (.-length filepath)))
       (if (= text saved-text)
-        (set! (.-title js/document) filepath)
-        (set! (.-title js/document) (str "* " filepath))))
+        (tauri/set-title filepath)
+        (tauri/set-title (str "* " filepath))))
 
     [:div {:id "wrapper"}
      [cm/codemirror {:force-overwrite force-overwrite
