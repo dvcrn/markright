@@ -1,27 +1,24 @@
 (ns markright.main
   (:require-macros [cljs.core.async.macros :refer (go)])
   (:require [cljs.core.async :refer [<!]]
-            [cljs.nodejs :as nodejs]
             [electron.ipc :as ipc]
-            [cljs.core.async :as async]
             [clojure.string :refer [split]]
-            [markright.dialogs :refer [unsaved-changes-dialog save-dialog open-dialog update-dialog error-dialog]])
-  (:import [goog.net XhrIo]))
+            [markright.dialogs :refer [unsaved-changes-dialog save-dialog open-dialog update-dialog error-dialog]]))
 
 (def *win* (atom nil))
 (def backend-state (atom {:frontend-loaded false :content nil :filepath nil}))
 
-(def https (nodejs/require "https"))
-(def path (nodejs/require "path"))
-(def BrowserWindow (nodejs/require "browser-window"))
-(def crash-reporter (nodejs/require "crash-reporter"))
+(def electron (js/require "electron"))
+(def app (.-app electron))
+(def shell (.-shell electron))
+(def BrowserWindow (.-BrowserWindow electron))
+(def crash-reporter (.-crashReporter electron))
+(def Menu (.-Menu electron))
 
-(def app (nodejs/require "app"))
-(def shell (nodejs/require "shell"))
-(def fs (nodejs/require "fs"))
-(def process (nodejs/require "process"))
-
-(def menu (nodejs/require "menu"))
+(def https (js/require "https"))
+(def path (js/require "path"))
+(def fs (js/require "fs"))
+(def process js/process)
 
 (def app-name "MarkRight")
 
@@ -41,7 +38,8 @@
   (.reload @*win*))
 
 (defn toggle-devtools! []
-  (.toggleDevTools @*win*))
+  (when-let [win @*win*]
+    (.toggleDevTools (.-webContents win))))
 
 (defn open-url! [url]
   (.openExternal shell url))
@@ -217,30 +215,34 @@
 
 (defn create-menu! []
   (.setApplicationMenu
-    menu
-    (.buildFromTemplate menu
-      (clj->js
-       (concat
-        (if (= (.-platform process) "darwin")
-          [markright] [])
-        [file
-         edit
-         window
-         develop
-         help])))))
+    Menu
+    (.buildFromTemplate Menu
+                        (clj->js
+                         (concat
+                          (if (= (.-platform process) "darwin")
+                            [markright] [])
+                          [file
+                           edit
+                           window
+                           develop
+                           help])))))
 
 (def index (str "file://" (.resolve path (.getAppPath app) "ui" "index.html")))
 
 (defn open-window! []
   (when (nil? @*win*)
-    (let [win (BrowserWindow. (clj->js {:width 1200 :height 600}))]
+    (let [win (BrowserWindow. (clj->js {:width 1200
+                                        :height 600
+                                        :webPreferences {:nodeIntegration true
+                                                         :contextIsolation false}}))]
       (reset! *win* win)
-      (.loadUrl win index)
+      (.loadURL win index)
       (ipc/set-target! win)
-      ;; (.openDevTools win)
-      (.on win "closed" (fn [] (do (reset! *win* nil) (swap! backend-state assoc :frontend-loaded false
-                                                                                 :content nil
-                                                                                 :filepath nil))))
+      (.on win "closed" (fn []
+                          (reset! *win* nil)
+                          (swap! backend-state assoc :frontend-loaded false
+                                 :content nil
+                                 :filepath nil)))
       (.on win "close" (fn [e]
                          (.preventDefault e)
                          (go (if (<! (verify-unsaved-changes))
@@ -283,14 +285,15 @@
 
 
 (defn main []
-  (.start crash-reporter)
+  (when crash-reporter
+    (.start crash-reporter (clj->js {:uploadToServer false})))
 
   ;; error listener
-  (.on nodejs/process "error"
-    (fn [err] (.log js/console err)))
+  (.on process "uncaughtException"
+       (fn [err] (.log js/console err)))
 
   (.on app "window-all-closed"
-    (fn [] (if (not= (.-platform nodejs/process) "darwin")
+    (fn [] (if (not= (.-platform process) "darwin")
              (.quit app))))
 
   ;; need to listen for open-file before the app is ready to not loose information

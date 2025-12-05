@@ -2,39 +2,26 @@
   "name": "markright",
   "productName": "MarkRight",
   "version": "0.1.11",
-  "electronVersion": "0.33.6",
-  "description": "",
-  "main":"app.js",
-  "devDependencies": {
-    "closurecompiler-externs": "^1.0.4",
-    "electron-packager": "^5.1.0",
-    "electron-builder": "^2.1.1",
-    "grunt": "^0.4.5",
-    "grunt-build-atom-shell": "^2.1.1",
-    "grunt-download-electron": "^2.1.2",
-    "plist": "^1.2.0"
-  },
+  "description": "A minimalistic GitHub flavored markdown editor",
+  "main": "app.js",
   "scripts": {
     "start": "electron node/",
-    "release": "npm run clean && npm run compile:prod && npm run build && npm run package",
-
-    "clean": "npm run clean:dist && npm run clean:source && npm run clean:target",
-    "clean:dist": "rm -rf ./dist",
-    "clean:source": "rm -rf ./node/ui/js/",
-    "clean:target": "rm -rf ./target/",
-
-    "compile:dev": "lein run -m build/main-dev && lein run -m build/ui-dev",
-    "compile:prod": "lein run -m build/prod",
-
-    "build": "npm run build:osx && npm run build:win && npm run build:linux",
-    "build:osx": "electron-packager node/ $npm_package_productName --out=dist --ignore='^/dist$' --overwrite --prune --asar --arch=all --platform=darwin --icon=./resources/icon.icns --version=$npm_package_electronVersion --app-version=$npm_package_version && node scripts/post-build-mac.js",
-    "build:win": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=win32 --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.ico --version=$npm_package_electronVersion --app-version=$npm_package_version",
-    "build:linux": "electron-packager node/ $npm_package_productName --out=dist --arch=all --platform=linux --ignore='^/dist$' --prune --asar --overwrite --icon=./resources/icon.png --version=$npm_package_electronVersion --app-version=$npm_package_version",
-
-    "package": "npm run package:win32 && npm run package:win64 && npm run package:osx && npm run package:linux",
-    "package:win64": "electron-builder dist/markright-win32-x64/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows64.exe",
-    "package:win32": "electron-builder dist/markright-win32-ia32/ --platform=win --out=dist --config=config.json && mv 'dist/MarkRight Setup.exe' dist/MarkRight_Windows32.exe",
-    "package:osx": "hdiutil create -format UDZO -srcfolder dist/MarkRight-darwin-x64/MarkRight.app dist/MarkRight_Mac.dmg",
-    "package:linux": "cd dist/ && zip -r MarkRight_Linux_x64.zip MarkRight-linux-x64 && zip -r MarkRight_Linux_ia32.zip MarkRight-linux-ia32 && cd ../"
+    "watch": "shadow-cljs watch main front",
+    "release": "shadow-cljs release main front",
+    "clean": "rm -rf ./dist ./node/ui/js/ ./.shadow-cljs ./target"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-packager": "^17.1.2",
+    "shadow-cljs": "^2.28.12"
+  },
+  "dependencies": {
+    "codemirror": "^5.65.16",
+    "codemirror-spell-checker": "^1.1.2",
+    "create-react-class": "^15.7.0",
+    "highlight.js": "^10.7.3",
+    "marked": "^4.0.12",
+    "react": "16.14.0",
+    "react-dom": "16.14.0"
   }
 }

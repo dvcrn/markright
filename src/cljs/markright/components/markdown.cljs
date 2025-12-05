@@ -1,17 +1,19 @@
 (ns markright.components.markdown
-  (:require [om.next :as om :refer-macros [defui]]
-            [om.dom :as dom :include-macros true]
-            [goog.dom :as gdom]))
+  (:require [reagent.core :as r]
+            [goog.dom :as gdom]
+            [markright.bootstrap]))
 
 (def current-path (atom ""))
 
-(defn fill-markdown [_]
+(defn fill-markdown []
   (let [md (. js/document (getElementById "parsed-markdown"))
         h (.-innerHeight js/window)]
-    (.setAttribute md "style" (str "height:" h "px;"))))
+    (when md (.setAttribute md "style" (str "height:" h "px;")))))
 
 (defn generate-open-external-string [url]
-  (str "require('shell').openExternal('" (js/decodeURIComponent url) "')"))
+  (str "require('electron').shell.openExternal('"
+       (js/decodeURIComponent url)
+       "'); return false;"))
 
 (defn parse-codeblocks! []
   (let [tags (.getElementsByTagName js/document "code")]
@@ -41,17 +43,27 @@
   (parse-codeblocks!)
   (parse-images! @current-path))
 
-(defui MarkdownComponent
-  Object
-  (render [this]
-          (let [{:keys [app/html app/filepath]} (om/props this)]
-            (swap! current-path #(subs filepath 0 (.lastIndexOf filepath "/")))
-            (dom/div #js {:id "parsed-markdown"}
-                     (dom/div #js {:className "markdown-body"
-                                   :dangerouslySetInnerHTML #js {:__html html}}))))
-  (componentWillMount [this] (.addEventListener js/window "resize" fill-markdown))
-  (componentWillUnmount [this] (.removeEventListener js/window "resize" fill-markdown))
-  (componentDidMount [this] (post-render!))
-  (componentDidUpdate [this prev-props prev-state] (post-render!)))
+(defn markdown-component [{:keys [html filepath]}]
+  (r/create-class
+   {:component-did-mount
+    (fn [this]
+      (.addEventListener js/window "resize" fill-markdown)
+      (post-render!))
 
-(def markdown (om/factory MarkdownComponent))
+    :component-will-unmount
+    (fn [this]
+      (.removeEventListener js/window "resize" fill-markdown))
+
+    :component-did-update
+    (fn [this]
+      (post-render!))
+
+    :reagent-render
+    (fn [{:keys [html filepath]}]
+      (reset! current-path (if filepath (subs filepath 0 (.lastIndexOf filepath "/")) ""))
+      [:div {:id "parsed-markdown"}
+       [:div {:class-name "markdown-body"
+              :dangerouslySetInnerHTML {:__html html}}]])}))
+
+(defn markdown [props]
+  [markdown-component props])

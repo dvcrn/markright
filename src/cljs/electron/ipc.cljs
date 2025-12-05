@@ -1,12 +1,12 @@
 (ns electron.ipc
-  (:require [cljs.nodejs :as node]
-            [cljs.core.async :as async]
+  (:require [cljs.core.async :as async]
             [cljs.reader :as reader]))
 
-
-;; FIXME: this is so incomplete ...
-
-(def IPC (node/require "ipc"))
+(def electron (js/require "electron"))
+(def renderer? (some? (.-ipcRenderer electron)))
+(def IPC (if renderer?
+           (.-ipcRenderer electron)
+           (.-ipcMain electron)))
 
 (def IPC-CHANNEL "electron.ipc")
 
@@ -18,10 +18,13 @@
   ::action)
 
 (defonce *pending* (volatile! {}))
-(def *ipc-target* (volatile! IPC))
+(def *ipc-target* (volatile! (when renderer? IPC)))
 
 (defn set-target! [target]
-  (vreset! *ipc-target* target))
+  ;; renderer always talks to ipcRenderer, main sends to the window's webContents
+  (if renderer?
+    (vreset! *ipc-target* IPC)
+    (vreset! *ipc-target* (.-webContents target))))
 
 (defn process-msg [event arg]
   (let [msg (if (nil? arg) event arg)

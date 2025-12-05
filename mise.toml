@@ -1,0 +1,5 @@
+[tools]
+bun = "latest"
+clojure = "latest"
+java = "latest"
+leiningen = "latest"

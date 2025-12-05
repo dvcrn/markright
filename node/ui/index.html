@@ -5,20 +5,35 @@
     <link href="css/main.css" rel="stylesheet"/>
     <link href="css/cousine.css" rel="stylesheet"/>
     <link href="css/github-markdown.css" rel="stylesheet"/>
-    <link href="bower_components/codemirror/lib/codemirror.css" rel="stylesheet"/>
-    <link href="bower_components/highlightjs/styles/github.css" rel="stylesheet"/>
-    <link href="bower_components/codemirror-spell-checker/dist/spell-checker.min.css" rel="stylesheet" />
+    <link href="../node_modules/codemirror/lib/codemirror.css" rel="stylesheet"/>
+    <link href="../node_modules/highlight.js/styles/github.css" rel="stylesheet"/>
+    <link href="../node_modules/codemirror-spell-checker/dist/spell-checker.min.css" rel="stylesheet" />
 
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/addon/mode/overlay.js"></script>
-    <script src="bower_components/codemirror/mode/markdown/markdown.js"></script>
-    <script src="bower_components/codemirror/mode/gfm/gfm.js"></script>
-    <script src="bower_components/codemirror-spell-checker/dist/spell-checker.min.js"></script>
-    <script src="bower_components/marked/lib/marked.js"></script>
-    <script src="bower_components/highlightjs/highlight.pack.min.js"></script>
+    <script src="../node_modules/codemirror/lib/codemirror.js"></script>
+    <script src="../node_modules/codemirror/addon/mode/overlay.js"></script>
+    <script src="../node_modules/codemirror/mode/markdown/markdown.js"></script>
+    <script src="../node_modules/codemirror/mode/gfm/gfm.js"></script>
+    <script src="../node_modules/codemirror-spell-checker/dist/spell-checker.min.js"></script>
+    <script src="../node_modules/marked/marked.min.js"></script>
 </head>
 <body>
 <app id="app"></app>
+<script type="text/javascript">
+  (function ensureDescriptors() {
+    function shim(name) {
+      var desc = Object.getOwnPropertyDescriptor(window, name);
+      if (desc && desc.writable === false) return;
+      Object.defineProperty(window, name, {
+        value: { Ua: { clone: function (proto) { return proto ? Object.create(proto) : {}; } } },
+        writable: false,
+        configurable: false
+      });
+    }
+    shim("mH");
+    shim("sH");
+    shim("AH");
+  })();
+</script>
 <script type="text/javascript" src="js/front.js"></script>
 </body>
 </html>

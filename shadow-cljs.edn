@@ -1,0 +1,18 @@
+{:source-paths
+ ["src/cljs"
+ "src/clj"]
+
+ :dependencies
+ [[org.clojure/clojure "1.11.2"]
+  [org.clojure/core.async "1.6.681"]
+  [reagent "1.2.0"]]
+
+ :builds
+ {:main {:target :node-script
+         :output-to "node/app.js"
+         :main markright.main/main}
+  :front {:target :browser
+          :output-dir "node/ui/js"
+          :asset-path "js"
+          :modules {:front {:entries [markright.ui]}}}}
+}

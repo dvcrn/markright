@@ -1,91 +1,33 @@
 (ns markright.parser
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [om.next :as om :refer-macros [defui]]
+  (:require [markright.state :refer [app-state]]
             [electron.ipc :as ipc]
-            [cljs.core.async :as async :refer [chan put! pub sub unsub]]))
+            [cljs.core.async :as async :refer [chan put! pub sub unsub <! >!]]))
 
-(defonce app-state (atom {:app/text ""
-                          :app/force-overwrite false
-                          :app/filepath ""
-                          :app/saved-text ""}))
+;; This namespace is kept for IPC handling compatibility
+;; but logic is moved to direct state manipulation
 
-(defonce root-channel
-  (chan))
+(defonce root-channel (chan))
 
-(defmulti read om/dispatch)
-(defmethod read :default
-  [{:keys [state]} k _]
-  (let [st @state]
-    (find st k)
-    (if-let [[_ v] (find st k)]
-      {:value v}
-      {:value :not-found})))
+(ipc/on :open-file
+        (fn [data]
+          (swap! app-state assoc
+                 :app/text (data :content)
+                 :app/saved-text (data :content)
+                 :app/filepath (data :filepath)
+                 :app/force-overwrite true)))
 
-(defmulti mutate om/dispatch)
-(defmethod mutate 'app/html
-  [{:keys [state]} _ {:keys [html]}]
-  {:value [:app/html]
-   :action #(swap! state assoc-in [:app/html] html)})
+(ipc/on :save-file
+        (fn [data]
+          (let [state @app-state]
+            (ipc/cast :save-file {:content (state :app/text)
+                                  :filepath (state :app/filepath)}))))
 
-(defmethod mutate 'app/text
-  [{:keys [state]} _ {:keys [text]}]
-  {:value [:app/text]
-   :action #(swap! state assoc-in [:app/text] text)})
+(ipc/on :save-file-success
+        (fn [data]
+          (swap! app-state assoc :app/saved-text (@app-state :app/text))))
 
-(defmethod mutate 'app/transact-overwrite
-  [{:keys [state]} _ {:keys [text]}]
-  {:value [:app/force-overwrite]
-   :action #(swap! state assoc-in [:app/force-overwrite] false)})
-
-(defmethod mutate 'app/reset-saved-text
-  [{:keys [state]} _ _]
-  {:action #(swap! state assoc-in [:app/saved-text] (@state :app/text))})
-
-(defmethod mutate 'app/load-content
-  [{:keys [state]} _ {:keys [filepath content]}]
-  {:action #(swap! state assoc :app/filepath filepath
-                               :app/force-overwrite true
-                               :app/text content
-                               :app/saved-text content)})
-
-(def reconciler
-  (om/reconciler
-    {:state app-state
-     :parser (om/parser {:read read :mutate mutate :force-overwrite false})}))
-
-(defmethod ipc/process-call :get-current-file
-  [msg reply]
-  (reply (get @app-state :app/filepath)))
-
-(defmethod ipc/process-call :get-current-content
-  [msg reply]
-  (reply (get @app-state :app/text)))
-
-(defmethod ipc/process-call :get-is-saved
-  [msg reply]
-  (reply (= (get @app-state :app/saved-text) (get @app-state :app/text))))
-
-(defmethod ipc/process-cast :load-file
-  [{:keys [file content]}]
-  (swap! app-state assoc
-    :app/force-overwrite true
-    :app/text content
-    :app/saved-text content
-    :app/filepath file))
-
-(defmethod ipc/process-cast :set-current-file
-  [{:keys [file content]}]
-  (swap! app-state assoc
-         :app/saved-text content
-         :app/filepath file))
-
-(defmethod ipc/process-cast :set-saved-content
-  [{:keys [content]}]
-  (go (>! root-channel #(om/transact! % `[(app/reset-saved-text)]))))
-
-(comment
-  (let [content]
-    (if (nil? state-path)
-      (save-file-as!)
-      (do
-        (swap! parser/app-state assoc :app/saved-text content)))))
+(ipc/on :save-as-file
+        (fn [data]
+          (let [state @app-state]
+            (ipc/cast :save-as-file {:content (state :app/text)}))))

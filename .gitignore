@@ -1,4 +1,5 @@
 pom.xml
+.shadow-cljs
 *jar
 /lib/
 /classes/

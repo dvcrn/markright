@@ -32,27 +32,21 @@ markright README.md
 
 ## Building
 
-MarkRight is written in clojurescript. To build, make sure you have clojure and leiningen installed on your system. 
+MarkRight is written in clojurescript and now builds with `shadow-cljs`.
 
 ### Requirements
 
-- `npm`
-- `leiningen`
-- `bower`
-- `npm install`
-- `bower install`
+- `bun`
+- `bun install`
 
 ### Compiling
-All commands you need are available inside `package.json`. To compile the code, run `npm run compile:<prod/dev>`. `node/` is the folder that goes into electron.
+- `bun run release` compiles both the electron main process and renderer via `shadow-cljs` (output goes into `node/app.js` and `node/ui/js/`).
+- `bun start` launches electron using the compiled output (run `bun run release` at least once before starting).
 
 ### Development
 
-To develop, run the self-reloading build:
-
-- `lein run -m build/ui-dev`
-- `lein run -m build/main-dev`
-
-shadow-build will live-reload the frontend so you don't need to refresh. If you change `main.cljs` however, you'll have to restart electron to reload your changes.
+- `bun run watch` runs `shadow-cljs watch main front` for live recompilation (keep it running).
+- In another terminal, run `bun start` to launch electron against the watched build.
 
 ## License
 

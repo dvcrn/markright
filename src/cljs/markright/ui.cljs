@@ -1,52 +1,43 @@
 (ns markright.ui
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
-  (:require [om.next :as om :refer-macros [defui]]
-            [om.dom :as dom :include-macros true]
+  (:require [reagent.core :as r]
+            [reagent.dom :as rdom]
             [goog.dom :as gdom]
-            [markright.parser :as p]
+            [markright.bootstrap]
+            [markright.state :refer [app-state]]
             [electron.ipc :as ipc]
             [markright.components.codemirror :as cm]
             [markright.components.markdown :as md]
             [cljs.core.async :as async :refer [chan put! pub sub unsub <!]]))
 
-(.initHighlightingOnLoad js/hljs)
+;; Ensure React/ReactDOM globals for Om/cljsjs interop
+;; Moved to markright.bootstrap
 
-(defui RootComponent
-  static om/IQuery
-  (query [this]
-    '[:app/text :app/force-overwrite :app/filepath :app/saved-text])
-  Object
-  (componentDidMount [this]
-                   ;; tell the backend that a frontend is now loaded
-                   (ipc/cast :init-frontend {})
-                   (go
-                       ;; since the backend could have already opened a file while the ui loads
-                       ;; we are going to ask it if this was the case
-                       (let [backend-state (<! (ipc/call :backend-state {}))]
-                         (if (not (nil? (backend-state :content)))
-                           (om/transact! this `[(app/load-content {:content ~(backend-state :content)
-                                                                   :filepath ~(backend-state :filepath)})])))
+(defn root-component []
+  (let [{:keys [app/text app/html app/force-overwrite app/filepath app/saved-text]} @app-state]
+    (if (not (= 0 (.-length filepath)))
+      (if (= text saved-text)
+        (set! (.-title js/document) filepath)
+        (set! (.-title js/document) (str "* " filepath))))
 
-                     ;; super mega hack
-                     ;; FIXME: remove me
-                     (go-loop []
-                       (let [fx (<! p/root-channel)]
-                         (fx this))
-                       (recur))))
-  (componentWillMount [this] (.setOptions js/marked #js {:gfm true}))
-  (componentWillReceiveProps [this next-props])
-  (render [this]
-    (let [{:keys [app/text app/html app/force-overwrite app/filepath app/saved-text]} (om/props this)]
-      (if (not (= 0 (.-length filepath)))
-        (if (= text saved-text)
-          (set! (.-title js/document) filepath)
-          (set! (.-title js/document) (str "* " filepath))))
+    [:div {:id "wrapper"}
+     [cm/codemirror {:force-overwrite force-overwrite
+                     :text text
+                     :text-callback #(swap! app-state assoc :app/text %)
+                     :overwrite-callback #(swap! app-state assoc :app/force-overwrite false)}]
+     [md/markdown {:html (js/marked text) :filepath filepath}]]))
 
-      (dom/div #js {:id "wrapper"}
-        (cm/codemirror {:app/force-overwrite force-overwrite
-                        :app/text text
-                        :text-callback #(om/transact! this `[(app/text {:text ~%})])
-                        :overwrite-callback #(om/transact! this `[(app/transact-overwrite)])})
-        (md/markdown {:app/html (js/marked text) :app/filepath filepath})))))
+(defn init []
+  (rdom/render [root-component] (gdom/getElement "app"))
+  (.setOptions js/marked #js {:gfm true})
+  (ipc/cast :init-frontend {})
+  (go
+    (let [backend-state (<! (ipc/call :backend-state {}))]
+      (when (not (nil? (backend-state :content)))
+        (swap! app-state assoc
+               :app/text (backend-state :content)
+               :app/saved-text (backend-state :content)
+               :app/filepath (backend-state :filepath)
+               :app/force-overwrite true)))))
 
-(om/add-root! p/reconciler RootComponent (gdom/getElement "app"))
+(init)
