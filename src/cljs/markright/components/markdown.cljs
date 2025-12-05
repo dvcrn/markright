@@ -2,7 +2,7 @@
   (:require [reagent.core :as r]
             [goog.dom :as gdom]
             [markright.bootstrap]
-            ["@tauri-apps/api/core" :refer [convertFileSrc]]))
+            ["@tauri-apps/plugin-fs" :refer [readFile]]))
 
 (def current-path (atom ""))
 
@@ -28,6 +28,15 @@
        (.setAttribute tag "onclick" (generate-open-external-string (.-href tag)))
        (.setAttribute tag "href" "#"))))
 
+(defn load-local-image [img-elem full-path]
+  (-> (readFile full-path)
+      (.then (fn [content]
+               (let [blob (js/Blob. #js [content])
+                     url (js/URL.createObjectURL blob)]
+                 (.setAttribute img-elem "src" url))))
+      (.catch (fn [err]
+                (js/console.error "Failed to load image:" full-path err)))))
+
 (defn parse-images! [current-path]
   (let [img-tags (.getElementsByTagName js/document "img")]
     (doseq [tag (array-seq img-tags)]
@@ -37,10 +46,8 @@
         (do
           (if (not (.getAttribute tag "data-src"))
             (.setAttribute tag "data-src" (.getAttribute tag "src")))
-          (let [full-path (str current-path "/" (.getAttribute tag "data-src"))
-                new-src (convertFileSrc full-path)]
-            (js/console.log "Converting path:" full-path "to:" new-src)
-            (.setAttribute tag "src" new-src)))))))
+          (let [full-path (str current-path "/" (.getAttribute tag "data-src"))]
+            (load-local-image tag full-path)))))))
 
 (defn post-render! []
   (parse-urls!)
