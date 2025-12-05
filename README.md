@@ -1,6 +1,6 @@
 _This project is currently frozen. If you want to help developing it, please feel free to [ping me](https://github.com/dvcrn)_
 
-![logo](logo_new.png)
+<img src="logo_new.png" width="128" alt="logo" />
 
 a minimalistic github flavored markdown editor
 
