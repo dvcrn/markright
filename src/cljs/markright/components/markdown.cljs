@@ -11,7 +11,7 @@
     (when md (.setAttribute md "style" (str "height:" h "px;")))))
 
 (defn generate-open-external-string [url]
-  (str "window.__TAURI__.opener.openUrl('"
+  (str "window.openUrl('"
        (js/decodeURIComponent url)
        "'); return false;"))
 

@@ -30,6 +30,9 @@
     "shadow-cljs": "^2.28.12"
   },
   "dependencies": {
+    "@tauri-apps/plugin-dialog": "^2.4.2",
+    "@tauri-apps/plugin-fs": "^2.4.4",
+    "@tauri-apps/plugin-opener": "^2.5.2",
     "codemirror": "^5.65.16",
     "codemirror-spell-checker": "^1.1.2",
     "create-react-class": "^15.7.0",

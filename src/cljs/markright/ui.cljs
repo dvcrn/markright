@@ -8,6 +8,7 @@
             [markright.state :refer [app-state]]
             [markright.components.codemirror :as cm]
             [markright.components.markdown :as md]
+            [markright.tauri :as tauri]
             [cljs.core.async :as async :refer [chan put! pub sub unsub <!]]))
 
 ;; Ensure React/ReactDOM globals for Om/cljsjs interop
@@ -32,7 +33,7 @@
   (when parser/loaded
     (rdom/render [root-component] (gdom/getElement "app"))
     (.setOptions js/marked #js {:gfm true})
-    ;; (ipc/cast :init-frontend {})
+    (tauri/init-listeners)
     (go
       ;; (let [backend-state (<! (ipc/call :backend-state {}))]
       ;;   (when (not (nil? (backend-state :content)))
